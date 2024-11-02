@@ -1,5 +1,9 @@
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   transpileDependencies: true,
-  publicPath: '/rkdflix/'
 })
+
+module.exports = {
+  publicPath: '/rkdflix/',
+  outputDir: 'dist'
+}

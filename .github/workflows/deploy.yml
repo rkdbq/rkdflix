@@ -18,7 +18,7 @@ jobs:
 
       - name: npm install and build
         run: |
-          npm install
+          npm install package.json
           npm run build
 
   deploy:

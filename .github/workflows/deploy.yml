@@ -7,11 +7,12 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -23,14 +24,9 @@ jobs:
           npm install package.json
           npm run build
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
       - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: ./dist
+          publish_branch: gh-page
+          publish_dir: dist

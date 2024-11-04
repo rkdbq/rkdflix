@@ -15,7 +15,7 @@ export default {
   components: {MovieItem},
   data() {
     return {
-      movieItems: {}
+      movieItems: []
     }
   },
   mounted() {
@@ -23,7 +23,7 @@ export default {
         .then(res => res.json())
         .then(json => {
           // 데이터를 성공적으로 가져온 후 title에 할당
-          this.movieItems = json['results'][2];
+          this.movieItems = json['results'];
         })
         .catch(err => console.error(err));
   }
@@ -34,7 +34,9 @@ export default {
   <div>
     <h1>Home</h1>
     <MovieItem
-        :title="movieItems['title']"
+        v-for="item in movieItems"
+        :key="item.id"
+        :title="item.title"
     />
   </div>
 </template>

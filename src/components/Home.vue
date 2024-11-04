@@ -28,7 +28,7 @@ export default {
         .catch(err => console.error(err));
   },
   methods: {
-    next_slide() {
+    nextSlide() {
       const slider = this.$refs.slider;
       slider.scrollBy({
         top: 0,
@@ -36,7 +36,7 @@ export default {
         behavior: 'smooth'
       });
     },
-    prev_slide() {
+    prevSlide() {
       const slider = this.$refs.slider;
       slider.scrollBy({
         top: 0,
@@ -52,18 +52,18 @@ export default {
   <div>
     <h1>Now Playing</h1>
     <div class="slider">
-      <button @click="prev_slide" class="arrow left-arrow">❮</button>
+      <button @click="prevSlide" class="arrow left-arrow">❮</button>
       <div class="movie-grid" ref="slider">
         <MovieItem
             v-for="item in movieItems"
             :key="item['id']"
             :title="item['title']"
-            :poster_path="item['poster_path']"
+            :posterPath="item['poster_path']"
             :overview="item['overview']"
-            :vote_average="item['vote_average']"
+            :voteAverage="item['vote_average']"
         />
       </div>
-      <button @click="next_slide" class="arrow right-arrow">❯</button>
+      <button @click="nextSlide" class="arrow right-arrow">❯</button>
     </div>
   </div>
 </template>

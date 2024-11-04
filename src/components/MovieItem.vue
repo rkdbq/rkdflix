@@ -3,16 +3,16 @@ const url = "https://image.tmdb.org/t/p/original"
 
 export default {
   name: "MovieItem",
-  props: ['title', 'poster_path', 'overview', 'vote_average'],
+  props: ['title', 'posterPath', 'overview', 'voteAverage'],
   computed: {
-    poster_url() {
-      return url + this.poster_path
+    posterUrl() {
+      return url + this.posterPath
     },
     voteAverageStyle() {
       let color;
-      if (this.rounded_vote_average >= 8) {
+      if (this.roundedVoteAverage >= 8) {
         color = "green";
-      } else if (this.rounded_vote_average >= 4) {
+      } else if (this.roundedVoteAverage >= 4) {
         color = "orange";
       } else {
         color = "red";
@@ -26,8 +26,8 @@ export default {
         fontWeight: "bold"
       }
     },
-    rounded_vote_average() {
-      return Math.round(this.vote_average * 10) / 10
+    roundedVoteAverage() {
+      return Math.round(this.voteAverage * 10) / 10
     },
     truncatedOverview() {
       // overview가 30자 이상일 경우 잘라내고 '...'을 추가
@@ -42,8 +42,8 @@ export default {
 <template>
   <div class="movie-item">
     <div class="poster-container">
-      <img :src="poster_url" :alt="title" />
-      <p :style="voteAverageStyle" class="vote-box">{{ rounded_vote_average }}</p>
+      <img :src="posterUrl" :alt="title" />
+      <p :style="voteAverageStyle" class="vote-box">{{ roundedVoteAverage }}</p>
     </div>
     <p class="title" v-if="title">{{ title }}</p>
     <p v-if="overview">{{truncatedOverview}}</p>

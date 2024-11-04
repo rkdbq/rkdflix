@@ -1,7 +1,7 @@
 <script>
 import MovieItem from "@/components/MovieItem.vue";
 
-const url = 'https://api.themoviedb.org/3/movie/popular?language=en-US&page=1';
+const url = 'https://api.themoviedb.org/3/movie/popular?language=en-US&page=';
 const options = {
   method: 'GET',
   headers: {
@@ -15,18 +15,31 @@ export default {
   components: {MovieItem},
   data() {
     return {
-      movieItems: []
+      movieItems: [],
+      currentPage: 1,
     }
   },
   mounted() {
-    fetch(url, options)
-        .then(res => res.json())
-        .then(json => {
-          // 데이터를 성공적으로 가져온 후 title에 할당
-          this.movieItems = json['results'];
-        })
-        .catch(err => console.error(err));
+    this.fetchMovies(this.currentPage);
   },
+  methods: {
+    fetchMovies(page) {
+      fetch(`${url}${page}`, options)
+          .then(res => res.json())
+          .then(json => {
+            this.movieItems = json['results'];
+          })
+          .catch(err => console.error(err));
+    },
+    nextPage() {
+      this.fetchMovies(++this.currentPage);
+    },
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.fetchMovies(--this.currentPage);
+      }
+    }
+  }
 }
 </script>
 
@@ -37,10 +50,15 @@ export default {
       <MovieItem
           v-for="item in movieItems"
           :key="item['id']"
-          :poster_path="item['poster_path']"
-          :vote_average="item['vote_average']"
+          :posterPath="item['poster_path']"
+          :voteAverage="item['vote_average']"
       />
     </div>
+  </div>
+  <div class="pagination">
+    <button @click="prevPage" :disabled="currentPage === 1">Previous</button>
+    <span>Page {{ currentPage }}</span>
+    <button @click="nextPage" :disabled="currentPage === 10">Next</button>
   </div>
 </template>
 
@@ -55,5 +73,13 @@ export default {
   gap: 16px;
   width: 100%;
   justify-items: center;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+.pagination button {
+  margin: 0 10px;
 }
 </style>

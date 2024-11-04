@@ -22,14 +22,27 @@ export default {
       loading: false,
 
       genreId: {},
+      sortParams: {
+        '인기순': "popularity",
+        '이름순': "title",
+        '별점순': "vote_average",
+        '개봉순': "primary_release_date"
+      },
+      orderParams: {
+        '오름차순': "asc",
+        '내림차순': "desc"
+      },
       selectedFilterOption: {
-        'sort by': "popularity.desc",
         'genre': "장르",
         'vote avg': "별점",
+        'sort by': "기준",
+        'order by': "순서"
       },
       filters: {
         'genre': [],
         'vote avg': ['0-2', '2-4', '4-6', '6-8', '8-10'],
+        'sort by': ['인기순', '이름순', '별점순'],
+        'order by': ['오름차순', '내림차순'],
       },
     }
   },
@@ -42,6 +55,18 @@ export default {
     window.removeEventListener('scroll', this.handleScroll);
   },
   methods: {
+    resetFilters() {
+      // 모든 필터 옵션을 초기화
+      this.selectedFilterOption = {
+        'genre': "장르",
+        'vote avg': "별점",
+        'sort by': "기준",
+        'order by': "순서"
+      };
+      this.movieItems = [];
+      this.currentPage = 1;
+      this.fetchSearchedMovies(this.currentPage);
+    },
     getGenreList() {
       const genreUrl = 'https://api.themoviedb.org/3/genre/movie/list?language=ko';
 
@@ -58,9 +83,10 @@ export default {
     fetchSearchedMovies(page) {
       this.loading = true;
 
-      const sortBy = this.selectedFilterOption['sort by'];
       const genre = this.selectedFilterOption['genre'];
       const voteAverage = this.selectedFilterOption['vote avg'];
+      const sortBy = this.selectedFilterOption['sort by'];
+      const orderBy = this.selectedFilterOption['order by'];
 
       let queryUrl = url + `page=${page}`;
       if (genre !== "장르") {
@@ -71,7 +97,11 @@ export default {
         const voteAverageRange = voteAverage.split('-');
         queryUrl += `&vote_average.gte=${voteAverageRange[0]}&vote_average.lte=${voteAverageRange[1]}`;
       }
-      queryUrl += `sort_by=${sortBy}`;
+      if (sortBy !== "기준" && orderBy !== "순서") {
+        const sortParam = this.sortParams[sortBy];
+        const orderParam = this.orderParams[orderBy];
+        queryUrl += `&sort_by=${sortParam}.${orderParam}`;
+      }
 
       console.log(queryUrl);
       fetch(queryUrl, options)
@@ -124,18 +154,14 @@ export default {
     <h1>Search</h1>
 
     <Filter
-        :filter-type="'genre'"
-        :options="filters['genre']"
-        :selected-option="selectedFilterOption['genre']"
+        v-for="[filterType, options] in Object.entries(filters)"
+        :key="filterType"
+        :filter-type="filterType"
+        :options="options"
+        :selected-option="selectedFilterOption[filterType]"
         @on-option-selected="selectOption"
     />
-
-    <Filter
-        :filter-type="'vote avg'"
-        :options="filters['vote avg']"
-        :selected-option="selectedFilterOption['vote avg']"
-        @on-option-selected="selectOption"
-    />
+    <button @click="resetFilters" class="reset-button">초기화</button>
 
     <div class="movie-grid-container">
       <div class="movie-grid">
@@ -193,5 +219,9 @@ export default {
 .loading-spinner {
   color: white; /* 글자 색상 */
   font-size: 24px; /* 글자 크기 */
+}
+.reset-button {
+  width: 100px;
+  margin: 16px;
 }
 </style>

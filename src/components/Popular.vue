@@ -19,28 +19,41 @@ export default {
       currentPage: 1,
       viewOption: "grid",
       isScrollListening: true,
+      loading: false
     }
   },
   mounted() {
     this.fetchMovies(this.currentPage);
     window.addEventListener('scroll', this.handleScroll); // 스크롤 이벤트 리스너 추가
   },
+  beforeUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
+  },
   methods: {
     fetchMovies(page) {
-      fetch(`${url}${page}`, options)
-          .then(res => res.json())
-          .then(json => {
-            this.movieItems = json['results'];
-          })
-          .catch(err => console.error(err));
-    },
-    fetchMoreMovies(page) {
-      fetch(`${url}${page}`, options)
-          .then(res => res.json())
-          .then(json => {
-            this.movieItems.push(...json['results']);
-          })
-          .catch(err => console.error(err));
+      this.loading = true;
+      if(this.viewOption === "grid") {
+        fetch(`${url}${page}`, options)
+            .then(res => res.json())
+            .then(json => {
+              this.movieItems = json['results'];
+            })
+            .catch(err => console.error(err))
+            .finally(() => {
+              this.loading = false;
+            });
+      }
+      else {
+        fetch(`${url}${page}`, options)
+            .then(res => res.json())
+            .then(json => {
+              this.movieItems.push(...json['results']);
+            })
+            .catch(err => console.error(err))
+            .finally(() => {
+              this.loading = false;
+            })
+      }
     },
     nextPage() {
       this.fetchMovies(++this.currentPage);
@@ -69,8 +82,7 @@ export default {
         if (scrollTop + windowHeight >= documentHeight - 5) {
           this.isScrollListening = false;
           this.currentPage++;
-          this.fetchMoreMovies(this.currentPage);
-          console.log("is bottom")
+          this.fetchMovies(this.currentPage);
 
           // 1초 후에 리스닝을 재개
           setTimeout(() => {
@@ -123,9 +135,14 @@ export default {
         />
       </div>
     </div>
+
     <div class="go-top-button">
       <button @click="goTop">Top</button>
     </div>
+  </div>
+
+  <div v-if="loading" class="loading-overlay">
+    <div class="loading-spinner">Loading...</div>
   </div>
 </template>
 
@@ -161,5 +178,21 @@ export default {
   padding: 10px 15px; /* 패딩 */
   border-radius: 5px; /* 모서리 둥글게 */
   z-index: 1000; /* 다른 요소 위에 표시 */
+}
+.loading-overlay {
+  position: fixed; /* 화면에 고정 */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+  display: flex;
+  justify-content: center; /* 중앙 정렬 */
+  align-items: center; /* 중앙 정렬 */
+  z-index: 1000; /* 다른 요소 위에 표시 */
+}
+.loading-spinner {
+  color: white; /* 글자 색상 */
+  font-size: 24px; /* 글자 크기 */
 }
 </style>

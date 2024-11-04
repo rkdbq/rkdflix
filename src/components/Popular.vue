@@ -18,10 +18,12 @@ export default {
       movieItems: [],
       currentPage: 1,
       viewOption: "grid",
+      isScrollListening: true,
     }
   },
   mounted() {
     this.fetchMovies(this.currentPage);
+    window.addEventListener('scroll', this.handleScroll); // 스크롤 이벤트 리스너 추가
   },
   methods: {
     fetchMovies(page) {
@@ -29,6 +31,14 @@ export default {
           .then(res => res.json())
           .then(json => {
             this.movieItems = json['results'];
+          })
+          .catch(err => console.error(err));
+    },
+    fetchMoreMovies(page) {
+      fetch(`${url}${page}`, options)
+          .then(res => res.json())
+          .then(json => {
+            this.movieItems.push(...json['results']);
           })
           .catch(err => console.error(err));
     },
@@ -45,6 +55,27 @@ export default {
       this.currentPage = 1; // 페이지를 1로 초기화
       this.fetchMovies(this.currentPage); // 영화 목록 새로 고침
     },
+    handleScroll() {
+      if (this.isScrollListening && this.viewOption === "scroll") {
+        // 문서의 높이와 현재 스크롤 위치를 계산
+        const scrollTop = window.scrollY;
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight;
+
+        // 최하단에 도달했을 때 다음 페이지를 로드
+        if (scrollTop + windowHeight >= documentHeight - 5) {
+          this.isScrollListening = false;
+          this.currentPage++;
+          this.fetchMoreMovies(this.currentPage);
+          console.log("is bottom")
+
+          // 1초 후에 리스닝을 재개
+          setTimeout(() => {
+            this.isScrollListening = true;
+          }, 1000);
+        }
+      }
+    },
   }
 }
 </script>
@@ -59,6 +90,7 @@ export default {
       Grid
     </button>
   </div>
+
   <div v-if="viewOption === 'grid'">
     <div class="movie-grid-container">
       <div class="movie-grid">
@@ -74,6 +106,19 @@ export default {
       <button @click="prevPage" :disabled="currentPage === 1">Previous</button>
       <span>Page {{ currentPage }}</span>
       <button @click="nextPage" :disabled="currentPage === 10">Next</button>
+    </div>
+  </div>
+
+  <div v-if="viewOption === 'scroll'">
+    <div class="movie-grid-container">
+      <div class="movie-grid">
+        <MovieItem
+            v-for="item in movieItems"
+            :key="item['id']"
+            :posterPath="item['poster_path']"
+            :voteAverage="item['vote_average']"
+        />
+      </div>
     </div>
   </div>
 </template>

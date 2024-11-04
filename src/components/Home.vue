@@ -24,14 +24,14 @@ export default {
     this.fetchMovies('upcoming');
   },
   methods: {
-    fetchMovies(key) {
-      const language = "en-US";
+    fetchMovies(pathParam) {
+      const language = "ko";
       const page = 1;
 
-      fetch(`${url}${key}?language=${language}&page=${page}`, options)
+      fetch(`${url}${pathParam}?language=${language}&page=${page}`, options)
           .then(res => res.json())
           .then(json => {
-            this.MovieItemsMap[key] = json['results'];
+            this.MovieItemsMap[pathParam] = json['results'];
           })
           .catch(err => console.error(err));
     },

@@ -69,4 +69,7 @@ img {
   right: 15px;
   text-align: center;
 }
+.title {
+  font-weight: bold;
+}
 </style>

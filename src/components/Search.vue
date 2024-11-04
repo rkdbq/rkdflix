@@ -2,7 +2,7 @@
 import MovieItem from "@/components/MovieItem.vue";
 import Filter from "@/components/Filter.vue";
 
-const url = 'https://api.themoviedb.org/3/discover/movie?';
+const url = 'https://api.themoviedb.org/3/discover/';
 const options = {
   method: 'GET',
   headers: {
@@ -83,12 +83,14 @@ export default {
     fetchSearchedMovies(page) {
       this.loading = true;
 
+      const pathParam = "movie"
+      const language = "ko";
       const genre = this.selectedFilterOption['genre'];
       const voteAverage = this.selectedFilterOption['vote avg'];
       const sortBy = this.selectedFilterOption['sort by'];
       const orderBy = this.selectedFilterOption['order by'];
 
-      let queryUrl = url + `page=${page}`;
+      let queryUrl = url + `${pathParam}?language=${language}&page=${page}`;
       if (genre !== "장르") {
         const genreId = this.genreId[genre];
         queryUrl += `&with_genres=${genreId}`;

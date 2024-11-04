@@ -17,6 +17,7 @@ export default {
     return {
       movieItems: [],
       currentPage: 1,
+      viewOption: "grid",
     }
   },
   mounted() {
@@ -38,31 +39,51 @@ export default {
       if (this.currentPage > 1) {
         this.fetchMovies(--this.currentPage);
       }
-    }
+    },
+    setViewOption(option) {
+      this.viewOption = option; // 선택된 옵션 설정
+      this.currentPage = 1; // 페이지를 1로 초기화
+      this.fetchMovies(this.currentPage); // 영화 목록 새로 고침
+    },
   }
 }
 </script>
 
 <template>
   <h1>Popular</h1>
-  <div class="movie-grid-container">
-    <div class="movie-grid">
-      <MovieItem
-          v-for="item in movieItems"
-          :key="item['id']"
-          :posterPath="item['poster_path']"
-          :voteAverage="item['vote_average']"
-      />
-    </div>
+  <div class="select-view-container">
+    <button @click="setViewOption('scroll')" :disabled="viewOption === 'scroll'">
+      Scroll
+    </button>
+    <button @click="setViewOption('grid')" :disabled="viewOption === 'grid'">
+      Grid
+    </button>
   </div>
-  <div class="pagination">
-    <button @click="prevPage" :disabled="currentPage === 1">Previous</button>
-    <span>Page {{ currentPage }}</span>
-    <button @click="nextPage" :disabled="currentPage === 10">Next</button>
+  <div v-if="viewOption === 'grid'">
+    <div class="movie-grid-container">
+      <div class="movie-grid">
+        <MovieItem
+            v-for="item in movieItems"
+            :key="item['id']"
+            :posterPath="item['poster_path']"
+            :voteAverage="item['vote_average']"
+        />
+      </div>
+    </div>
+    <div class="pagination">
+      <button @click="prevPage" :disabled="currentPage === 1">Previous</button>
+      <span>Page {{ currentPage }}</span>
+      <button @click="nextPage" :disabled="currentPage === 10">Next</button>
+    </div>
   </div>
 </template>
 
 <style scoped>
+.select-view-container {
+  display: flex;
+  justify-content: flex-end;
+  margin: 16px;
+}
 .movie-grid-container {
   display: flex;
   justify-content: center;

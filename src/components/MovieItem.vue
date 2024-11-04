@@ -45,8 +45,8 @@ export default {
       <img :src="poster_url" :alt="title" />
       <p :style="voteAverageStyle" class="vote-box">{{ rounded_vote_average }}</p>
     </div>
-    <p class="title">{{ title }}</p>
-    <p>{{truncatedOverview}}</p>
+    <p class="title" v-if="title">{{ title }}</p>
+    <p v-if="overview">{{truncatedOverview}}</p>
   </div>
 </template>
 

@@ -22,8 +22,6 @@ export default {
     this.fetchMovies('now_playing');
     this.fetchMovies('top_rated');
     this.fetchMovies('upcoming');
-
-    console.log(this.MovieItemsMap);
   },
   methods: {
     fetchMovies(key) {

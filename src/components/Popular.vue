@@ -1,12 +1,13 @@
 <script>
+
 export default {
-  name: "MyList"
+  name: "PopularMovie"
 }
 </script>
 
 <template>
   <div>
-    <h1>My List</h1>
+    <h1>Popular</h1>
   </div>
 </template>
 

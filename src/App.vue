@@ -2,9 +2,9 @@
   <header>
     <nav>
       <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/trend">Trend</RouterLink>
+      <RouterLink to="/popular">Popular</RouterLink>
       <RouterLink to="/search">Search</RouterLink>
-      <RouterLink to="/my-list">My List</RouterLink>
+      <RouterLink to="/wishlist">Wishlist</RouterLink>
     </nav>
   </header>
   <p>

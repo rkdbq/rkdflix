@@ -3,15 +3,15 @@ import App from './App.vue'
 import { createMemoryHistory, createRouter } from 'vue-router'
 
 import Home from "@/components/Home.vue";
-import Trend from "@/components/Trend.vue";
+import PopularMovie from "@/components/Popular.vue";
 import Search from "@/components/Search.vue";
-import MyList from "@/components/MyList.vue";
+import Wishlist from "@/components/Wishlist.vue";
 
 const routes = [
     { path: '/', component: Home },
-    { path: '/trend', component: Trend },
+    { path: '/popular', component: PopularMovie },
     { path: '/search', component: Search },
-    { path: '/my-list', component: MyList },
+    { path: '/Wishlist', component: Wishlist },
 ]
 
 const router = createRouter({

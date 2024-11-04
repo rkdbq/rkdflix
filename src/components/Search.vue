@@ -2,7 +2,7 @@
 import MovieItem from "@/components/MovieItem.vue";
 import Filter from "@/components/Filter.vue";
 
-const url = 'https://api.themoviedb.org/3/movie/popular?language=en-US&page=';
+const url = 'https://api.themoviedb.org/3/discover/movie?';
 const options = {
   method: 'GET',
   headers: {
@@ -21,15 +21,20 @@ export default {
       isScrollListening: true,
       loading: false,
 
+      genreId: {},
       selectedFilterOption: {
-        'genre': null,
+        'sort by': "popularity.desc",
+        'genre': "장르",
+        'vote avg': "별점",
       },
       filters: {
-        'genre': ["Option 1", "Option 2", "Option 3"]
+        'genre': [],
+        'vote avg': ['0-2', '2-4', '4-6', '6-8', '8-10'],
       },
     }
   },
   mounted() {
+    this.getGenreList();
     this.fetchSearchedMovies(this.currentPage);
     window.addEventListener('scroll', this.handleScroll); // 스크롤 이벤트 리스너 추가
   },
@@ -37,9 +42,39 @@ export default {
     window.removeEventListener('scroll', this.handleScroll);
   },
   methods: {
+    getGenreList() {
+      const genreUrl = 'https://api.themoviedb.org/3/genre/movie/list?language=ko';
+
+      fetch(genreUrl, options)
+          .then(res => res.json())
+          .then(json => {
+            // console.log(json);
+            json['genres'].forEach((genre) => {
+              this.filters['genre'].push(genre['name']);
+              this.genreId[genre['name']] = genre['id'];
+            });
+          })
+    },
     fetchSearchedMovies(page) {
       this.loading = true;
-      fetch(`${url}${page}`, options)
+
+      const sortBy = this.selectedFilterOption['sort by'];
+      const genre = this.selectedFilterOption['genre'];
+      const voteAverage = this.selectedFilterOption['vote avg'];
+
+      let queryUrl = url + `page=${page}`;
+      if (genre !== "장르") {
+        const genreId = this.genreId[genre];
+        queryUrl += `&with_genres=${genreId}`;
+      }
+      if (voteAverage !== "별점") {
+        const voteAverageRange = voteAverage.split('-');
+        queryUrl += `&vote_average.gte=${voteAverageRange[0]}&vote_average.lte=${voteAverageRange[1]}`;
+      }
+      queryUrl += `sort_by=${sortBy}`;
+
+      console.log(queryUrl);
+      fetch(queryUrl, options)
           .then(res => res.json())
           .then(json => {
             this.movieItems.push(...json['results']);
@@ -74,8 +109,11 @@ export default {
     },
     selectOption(payload) {
       const filter = payload[0];
-      const option = payload[1];
-      this.selectedFilterOption[filter] = option;
+      this.selectedFilterOption[filter] = payload[1];
+
+      this.movieItems = [];
+      this.currentPage = 1;
+      this.fetchSearchedMovies(this.currentPage);
     }
   }
 }
@@ -89,6 +127,13 @@ export default {
         :filter-type="'genre'"
         :options="filters['genre']"
         :selected-option="selectedFilterOption['genre']"
+        @on-option-selected="selectOption"
+    />
+
+    <Filter
+        :filter-type="'vote avg'"
+        :options="filters['vote avg']"
+        :selected-option="selectedFilterOption['vote avg']"
         @on-option-selected="selectOption"
     />
 

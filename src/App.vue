@@ -1,10 +1,13 @@
 <template>
   <header>
-    <nav>
-      <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/popular">Popular</RouterLink>
-      <RouterLink to="/search">Search</RouterLink>
-      <RouterLink to="/wishlist">Wishlist</RouterLink>
+    <nav v-if="$route.path !== '/sign-in'">
+      <RouterLink class="nav-item" to="/">Home</RouterLink>
+      <RouterLink class="nav-item" to="/popular">Popular</RouterLink>
+      <RouterLink class="nav-item" to="/search">Search</RouterLink>
+      <RouterLink class="nav-item" to="/wishlist">Wishlist</RouterLink>
+    </nav>
+    <nav v-if="$route.path !== '/sign-in'">
+      <RouterLink class="nav-item" to="/signin">Log Out</RouterLink>
     </nav>
   </header>
   <p>
@@ -20,7 +23,6 @@ export default {
   name: 'App',
   components: {
   }
-
 }
 </script>
 
@@ -36,13 +38,13 @@ export default {
 
 header {
   display: flex;
-  justify-content: flex-start; /* 좌측 정렬 */
-  align-items: center;
+  justify-content: space-between;
   padding: 10px;
 }
-
 nav {
-  display: flex;
   gap: 20px; /* 링크 간격 */
+}
+.nav-item {
+  padding: 10px;
 }
 </style>

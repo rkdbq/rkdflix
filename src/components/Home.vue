@@ -26,14 +26,14 @@ export default {
     console.log(this.MovieItemsMap);
   },
   methods: {
-    fetchMovies(listType) {
+    fetchMovies(key) {
       const language = "en-US";
       const page = 1;
 
-      fetch(`${url}${listType}?language=${language}&page=${page}`, options)
+      fetch(`${url}${key}?language=${language}&page=${page}`, options)
           .then(res => res.json())
           .then(json => {
-            this.MovieItemsMap[listType] = json['results'];
+            this.MovieItemsMap[key] = json['results'];
           })
           .catch(err => console.error(err));
     },

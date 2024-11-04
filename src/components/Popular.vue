@@ -23,14 +23,14 @@ export default {
     }
   },
   mounted() {
-    this.fetchMovies(this.currentPage);
+    this.fetchPopularMovies(this.currentPage);
     window.addEventListener('scroll', this.handleScroll); // 스크롤 이벤트 리스너 추가
   },
   beforeUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
   },
   methods: {
-    fetchMovies(page) {
+    fetchPopularMovies(page) {
       this.loading = true;
       if(this.viewOption === "grid") {
         fetch(`${url}${page}`, options)
@@ -56,11 +56,11 @@ export default {
       }
     },
     nextPage() {
-      this.fetchMovies(++this.currentPage);
+      this.fetchPopularMovies(++this.currentPage);
     },
     prevPage() {
       if (this.currentPage > 1) {
-        this.fetchMovies(--this.currentPage);
+        this.fetchPopularMovies(--this.currentPage);
       }
     },
     goTop() {
@@ -69,7 +69,7 @@ export default {
     setViewOption(option) {
       this.viewOption = option; // 선택된 옵션 설정
       this.currentPage = 1; // 페이지를 1로 초기화
-      this.fetchMovies(this.currentPage); // 영화 목록 새로 고침
+      this.fetchPopularMovies(this.currentPage); // 영화 목록 새로 고침
     },
     handleScroll() {
       if (this.isScrollListening && this.viewOption === "scroll") {
@@ -82,7 +82,7 @@ export default {
         if (scrollTop + windowHeight >= documentHeight - 5) {
           this.isScrollListening = false;
           this.currentPage++;
-          this.fetchMovies(this.currentPage);
+          this.fetchPopularMovies(this.currentPage);
 
           // 1초 후에 리스닝을 재개
           setTimeout(() => {

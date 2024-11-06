@@ -15,30 +15,47 @@
     </div>
   </div>
 </template>
+
 <script>
-export default {
+import { defineComponent, ref } from 'vue';
+
+export default defineComponent({
   name: 'FilterDropdown',
   props: {
-    filterType: String,
-    options: {},
-    selectedOption: {},
-  },
-  data() {
-    return {
-      isOpen: false,
-    }
-  },
-  methods: {
-    toggleDropdown() {
-      this.isOpen = !this.isOpen;
+    filterType: {
+      type: String,
+      required: true,
     },
-    selectOption(option) {
-      this.$emit('onOptionSelected', [this.filterType, option]);
-      this.toggleDropdown()
-    }
-  }
-}
+    options: {
+      type: Array,
+      required: true,
+    },
+    selectedOption: {
+      type: String,
+      required: true,
+    },
+  },
+  setup(props, { emit }) {
+    const isOpen = ref(false);
+
+    const toggleDropdown = () => {
+      isOpen.value = !isOpen.value;
+    };
+
+    const selectOption = (option) => {
+      emit('onOptionSelected', [props.filterType, option]);
+      toggleDropdown();
+    };
+
+    return {
+      isOpen,
+      toggleDropdown,
+      selectOption,
+    };
+  },
+});
 </script>
+
 <style scoped>
 .dropdown {
   position: relative;

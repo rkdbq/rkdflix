@@ -1,20 +1,3 @@
-<script>
-import MovieItem from "@/components/movie/MovieItem.vue";
-
-export default {
-  name: "WishList",
-  components: {MovieItem},
-  computed: {
-    wishlist() {
-      return Object.values(this.$store.state.user.wishlist);
-    }
-  },
-  mounted() {
-    console.log(this.wishlist);
-  }
-}
-</script>
-
 <template>
   <div class="movie-grid-container">
     <div class="movie-grid">
@@ -31,13 +14,30 @@ export default {
   </div>
 </template>
 
+<script>
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+import MovieItem from "@/components/movie/MovieItem.vue";
+
+export default {
+  name: "WishList",
+  components: { MovieItem },
+  setup() {
+    const store = useStore();
+    const wishlist = computed(() => Object.values(store.state.user.wishlist));
+
+    return { wishlist };
+  },
+};
+</script>
+
 <style scoped>
 .movie-grid-container {
   display: flex;
   justify-content: center;
 }
 .movie-grid {
-  display: grid; /* 그리드 레이아웃 사용 */
+  display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 16px;
   width: 100%;

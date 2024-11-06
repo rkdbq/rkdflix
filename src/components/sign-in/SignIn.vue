@@ -1,10 +1,11 @@
 <template>
   <div v-if="isLogin" class="sign-in-container">
-    <div>
-      <label for="id">아이디:</label>
-      <input type="text" id="id" v-model="userId" />
-      <p style="color: red;">{{ emailError }}</p>
-    </div>
+    <UserInput :field-name="'아이디'"
+                 :input-field="userId"
+                 :validation-message="emailError"
+                 :validate-function="validateEmail"
+                 @on-changed="onIdChanged"
+    />
     <div>
       <label for="pw">비밀번호:</label>
       <input type="password" id="pw" v-model="userPw" />
@@ -45,9 +46,11 @@
 import { ref, watch } from 'vue';
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
+import UserInput from "@/components/sign-in/UserInput.vue";
 
 export default {
   name: "SignIn",
+  components: {UserInput: UserInput},
   setup() {
     const store = useStore();
     const router = useRouter();
@@ -67,9 +70,9 @@ export default {
     const pwError = ref('');
 
     // Watchers
-    watch(userId, (value) => {
-      checkEmail(value);
-    });
+    // watch(userId, (value) => {
+    //   checkEmail(value);
+    // });
     watch(userIdRegister, (value) => {
       checkEmail(value);
     });
@@ -81,6 +84,9 @@ export default {
     });
 
     const LogIn = () => {
+      if(emailError.value) {
+        alert(emailError.value);
+      }
       if (!userId.value) {
         alert('아이디를 입력해주세요.');
       }
@@ -114,20 +120,20 @@ export default {
     };
 
     const Register = () => {
-      if (!userIdRegister.value) {
-        alert('아이디를 입력해주세요.');
-        return;
-      }
-      if (!userPwRegister.value) {
-        alert('비밀번호를 입력해주세요.');
-        return;
-      }
       if (emailError.value) {
         alert(emailError.value);
         return;
       }
       if (pwError.value) {
         alert(pwError.value);
+        return;
+      }
+      if (!userIdRegister.value) {
+        alert('아이디를 입력해주세요.');
+        return;
+      }
+      if (!userPwRegister.value) {
+        alert('비밀번호를 입력해주세요.');
         return;
       }
       if (!conditionAgreementRegister.value) {
@@ -147,7 +153,21 @@ export default {
     const checkEmail = (email) => {
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       emailError.value = email && !emailPattern.test(email) ? "유효한 이메일 형식이 아닙니다." : '';
+      console.log(emailError.value);
     };
+
+    const validateEmail = (email) => {
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      emailError.value = email && !emailPattern.test(email) ? "유효한 이메일 형식이 아닙니다." : '';
+      return emailError.value;
+    };
+
+    const onIdChanged = (args) => {
+      const email = args[0].value;
+      const msg = args[1].value;
+      userId.value = email;
+      emailError.value = msg;
+    }
 
     const checkPassword = () => {
       const pw = userPwRegister.value;
@@ -169,6 +189,9 @@ export default {
       LogIn,
       Toggle,
       Register,
+      checkEmail,
+      validateEmail,
+      onIdChanged
     };
   },
 }

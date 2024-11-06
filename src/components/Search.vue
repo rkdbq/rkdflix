@@ -1,5 +1,5 @@
 <script>
-import Filter from "@/components/Filter.vue";
+import Filter from "@/components/filter/Filter.vue";
 import MovieGrid from "@/components/movie/MovieGrid.vue";
 
 const url = 'https://api.themoviedb.org/3/discover/';

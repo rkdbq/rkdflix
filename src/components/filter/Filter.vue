@@ -1,7 +1,7 @@
 <template>
   <div class="dropdown">
     <button @click="toggleDropdown" class="dropdown-button">
-      {{ selectedOption || filterType.toUpperCase() }}
+      {{ selectedOption }}
     </button>
     <div v-if="isOpen" class="dropdown-menu">
       <button

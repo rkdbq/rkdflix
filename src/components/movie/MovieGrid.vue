@@ -14,17 +14,23 @@
     </div>
   </div>
 </template>
-<script>
-import MovieItem from "@/components/movie/MovieItem.vue"
 
-export default {
+<script>
+import {defineComponent} from 'vue';
+import MovieItem from "@/components/movie/MovieItem.vue";
+
+export default defineComponent({
   name: 'MovieGrid',
-  components: {MovieItem},
+  components: { MovieItem },
   props: {
-    movieItems: {}
-  }
-}
+    movieItems: {
+      type: Array,
+      required: true
+    }
+  },
+});
 </script>
+
 <style scoped>
 .movie-grid-container {
   display: flex;

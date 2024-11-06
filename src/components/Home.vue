@@ -6,7 +6,7 @@
 
 <script>
 import { ref, onMounted } from 'vue';
-import MovieList from "@/components/movie/MovieList.vue";
+import MovieList from "@/components/movie/MovieSlider.vue";
 
 const url = 'https://api.themoviedb.org/3/movie/';
 const options = {

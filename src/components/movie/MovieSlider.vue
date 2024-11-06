@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>{{listName}}</h1>
+    <h1>{{ listName }}</h1>
     <div class="slider">
       <button @click="prevSlide" class="arrow left-arrow">❮</button>
       <div class="movie-grid" ref="slider">
@@ -19,39 +19,60 @@
     </div>
   </div>
 </template>
-<script>
-import MovieItem from "@/components/movie/MovieItem.vue"
 
-export default {
+<script>
+import { defineComponent, ref, onMounted } from 'vue';
+import MovieItem from "@/components/movie/MovieItem.vue";
+
+export default defineComponent({
   name: 'MovieList',
-  components: {MovieItem},
+  components: { MovieItem },
   props: {
-    listName: String,
-    movieItems: Array,
-  },
-  mounted() {
-    console.log(this.movieItems);
-  },
-  methods: {
-    nextSlide() {
-      const slider = this.$refs.slider;
-      slider.scrollBy({
-        top: 0,
-        left: slider.clientWidth,
-        behavior: 'smooth'
-      });
+    listName: {
+      type: String,
+      required: true
     },
-    prevSlide() {
-      const slider = this.$refs.slider;
-      slider.scrollBy({
-        top: 0,
-        left: -slider.clientWidth,
-        behavior: 'smooth'
-      });
+    movieItems: {
+      type: Array,
+      required: true
     }
+  },
+  setup(props) {
+    const slider = ref(null);
+
+    const nextSlide = () => {
+      if (slider.value) {
+        slider.value.scrollBy({
+          top: 0,
+          left: slider.value.clientWidth,
+          behavior: 'smooth'
+        });
+      }
+    };
+
+    const prevSlide = () => {
+      if (slider.value) {
+        slider.value.scrollBy({
+          top: 0,
+          left: -slider.value.clientWidth,
+          behavior: 'smooth'
+        });
+      }
+    };
+
+    onMounted(() => {
+      console.log(props.movieItems);
+    });
+
+    return {
+      slider,
+      nextSlide,
+      prevSlide,
+    };
   }
-}
+});
 </script>
+
 <style scoped>
 .slider {
   display: flex;
@@ -98,5 +119,4 @@ export default {
 .right-arrow {
   right: 10px;
 }
-
 </style>

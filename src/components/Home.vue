@@ -1,4 +1,11 @@
+<template>
+  <MovieList :list-name="'Now Playing'" :movie-items="movieItemsMap['now_playing']"/>
+  <MovieList :list-name="'Top Rated'" :movie-items="movieItemsMap['top_rated']"/>
+  <MovieList :list-name="'Upcoming'" :movie-items="movieItemsMap['upcoming']"/>
+</template>
+
 <script>
+import { ref, onMounted } from 'vue';
 import MovieList from "@/components/movie/MovieList.vue";
 
 const url = 'https://api.themoviedb.org/3/movie/';
@@ -12,35 +19,29 @@ const options = {
 
 export default {
   name: "HomePage",
-  components: {MovieList},
-  data() {
-    return {
-      movieItemsMap: {},
-    }
-  },
-  mounted() {
-    this.fetchMovies('now_playing');
-    this.fetchMovies('top_rated');
-    this.fetchMovies('upcoming');
-  },
-  methods: {
-    fetchMovies(pathParam) {
+  components: { MovieList },
+  setup() {
+    const movieItemsMap = ref({});
+
+    const fetchMovies = (pathParam) => {
       const language = "ko";
       const page = 1;
 
       fetch(`${url}${pathParam}?language=${language}&page=${page}`, options)
           .then(res => res.json())
           .then(json => {
-            this.movieItemsMap[pathParam] = json['results'];
+            movieItemsMap.value[pathParam] = json['results'];
           })
           .catch(err => console.error(err));
-    },
-  },
-}
-</script>
+    };
 
-<template>
-  <MovieList :list-name="'Now Playing'" :movie-items="movieItemsMap['now_playing']"/>
-  <MovieList :list-name="'Top Rated'" :movie-items="movieItemsMap['top_rated']"/>
-  <MovieList :list-name="'Upcoming'" :movie-items="movieItemsMap['upcoming']"/>
-</template>
+    onMounted(() => {
+      fetchMovies('now_playing');
+      fetchMovies('top_rated');
+      fetchMovies('upcoming');
+    });
+
+    return { movieItemsMap };
+  },
+};
+</script>

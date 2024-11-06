@@ -13,6 +13,23 @@ export default {
       userPasswordRegister: '',
       userPasswordConfirmRegister: '',
       conditionAgreementRegister: false,
+
+      emailError: '',
+      passwordError: '',
+    }
+  },
+  watch: {
+    userId(value) {
+      this.checkEmail(value);
+    },
+    userIdRegister(value) {
+      this.checkEmail(value);
+    },
+    userPasswordRegister() {
+      this.checkPassword();
+    },
+    userPasswordConfirmRegister() {
+      this.checkPassword();
     }
   },
   methods: {
@@ -26,10 +43,46 @@ export default {
       this.isLogin = !this.isLogin;
     },
     Register() {
+      if (this.userIdRegister === '') {
+        alert('아이디를 입력해주세요.');
+        return;
+      }
+      if (this.userPasswordRegister === '') {
+        alert('비밀번호를 입력해주세요.');
+        return;
+      }
+      if (this.emailError !== '') {
+        alert(this.emailError);
+        return;
+      }
+      if (this.passwordError !== '') {
+        alert(this.passwordError);
+        return;
+      }
+      if (!this.conditionAgreementRegister) {
+        alert('약관에 동의해주세요.');
+        return;
+      }
+
       console.log("Register:", this.userIdRegister);
       console.log("Register:", this.userPasswordRegister);
       console.log("Register:", this.userPasswordConfirmRegister);
       console.log("Register:", this.conditionAgreementRegister);
+
+      this.Toggle();
+      this.userIdRegister = '';
+      this.userPasswordRegister = '';
+      this.userPasswordConfirmRegister = '';
+      this.conditionAgreementRegister = false;
+    },
+    checkEmail(email) {
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      this.emailError = email && !emailPattern.test(email) ? "유효한 이메일 형식이 아닙니다." : '';
+    },
+    checkPassword() {
+      const pw = this.userPasswordRegister;
+      const pwConfirm = this.userPasswordConfirmRegister;
+      this.passwordError = pw !== pwConfirm ? "비밀번호가 다릅니다." : '';
     }
   },
 }
@@ -40,6 +93,7 @@ export default {
     <div>
       <label for="id">아이디:</label>
       <input type="text" id="id" v-model="userId" />
+      <p style="color: red;">{{ emailError }}</p>
     </div>
     <div>
       <label for="password">비밀번호:</label>
@@ -51,6 +105,7 @@ export default {
     <div>
       <label for="id">아이디:</label>
       <input type="text" id="id" v-model="userIdRegister" />
+      <p style="color: red;">{{ emailError }}</p>
     </div>
     <div>
       <label for="password">비밀번호:</label>
@@ -59,6 +114,7 @@ export default {
     <div>
       <label for="password">비밀번호 확인:</label>
       <input type="password" id="password-confirm" v-model="userPasswordConfirmRegister" />
+      <p style="color: red;">{{ passwordError }}</p>
     </div>
     <div>
       <label for="password">약관 동의: </label>

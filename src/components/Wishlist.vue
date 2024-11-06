@@ -5,6 +5,7 @@
           v-for="item in wishlist"
           :key="item['id']"
           :id="item['id']"
+          :title="item['title']"
           :posterPath="item['poster_path']"
           :voteAverage="item['vote_average']"
           :overview="item['overview']"

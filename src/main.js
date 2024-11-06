@@ -27,6 +27,7 @@ const store = createStore({
         return {
             user: {
                 userId: null,
+                password: null,
                 wishlist: {},
             },
         };
@@ -49,8 +50,15 @@ const store = createStore({
     actions: {
         toggleMovieInWishlist({ commit }, movieItem) {
             commit('toggleToWishlist', movieItem);
+            const userId = store.state.user.userId;
+            const user = {
+                'password': store.state.user.password,
+                'wishlist': store.state.user.wishlist,
+            }
+            localStorage.setItem(userId, JSON.stringify(user));
         }
-    }
+    },
 });
 
-createApp(App).use(router).use(store).mount('#app')
+createApp(App).use(router).use(store).mount('#app');
+router.push('/signin');

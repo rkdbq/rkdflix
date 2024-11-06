@@ -44,13 +44,13 @@ export default {
 
       const user = JSON.parse(localStorage.getItem(this.userId));
 
-      if(this.userPassword !== user['password']) {
+      if(!user || this.userPassword !== user['password']) {
         alert('비밀번호가 일치하지 않습니다.');
         return;
       }
 
       alert('로그인 성공!');
-      this.$store.commit('setUser', { userId: this.userId, wishlist: user['wishlist'] });
+      this.$store.commit('setUser', { userId: this.userId, password: user['password'], wishlist: user['wishlist'] });
       this.$router.push('/');
     },
     Toggle() {

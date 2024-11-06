@@ -18,9 +18,7 @@
       <button @click="goTop">Top</button>
     </div>
 
-    <div v-if="loading" class="loading-overlay">
-      <div class="loading-spinner">Loading...</div>
-    </div>
+    <Loading :isLoading="loading"/>
   </div>
 </template>
 
@@ -28,6 +26,7 @@
 import { ref, reactive, onMounted, onBeforeUnmount } from "vue";
 import Filter from "@/components/filter/Filter.vue";
 import MovieGrid from "@/components/movie/MovieGrid.vue";
+import Loading from "@/components/Loading.vue";
 
 const url = 'https://api.themoviedb.org/3/discover/';
 const options = {
@@ -40,7 +39,7 @@ const options = {
 
 export default {
   name: "SearchMovie",
-  components: { MovieGrid, Filter },
+  components: { MovieGrid, Filter, Loading },
   setup() {
     const movieItems = ref([]);
     const currentPage = ref(1);
@@ -117,7 +116,6 @@ export default {
         queryUrl += `&sort_by=${sortParam}.${orderParam}`;
       }
 
-      console.log(queryUrl);
       fetch(queryUrl, options)
           .then(res => res.json())
           .then(json => {
@@ -199,22 +197,6 @@ export default {
   padding: 10px 15px; /* 패딩 */
   border-radius: 5px; /* 모서리 둥글게 */
   z-index: 1000; /* 다른 요소 위에 표시 */
-}
-.loading-overlay {
-  position: fixed; /* 화면에 고정 */
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
-  display: flex;
-  justify-content: center; /* 중앙 정렬 */
-  align-items: center; /* 중앙 정렬 */
-  z-index: 1000; /* 다른 요소 위에 표시 */
-}
-.loading-spinner {
-  color: white; /* 글자 색상 */
-  font-size: 24px; /* 글자 크기 */
 }
 .reset-button {
   width: 100px;

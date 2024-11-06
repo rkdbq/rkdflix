@@ -2,11 +2,14 @@
   <MovieList :list-name="'Now Playing'" :movie-items="movieItemsMap['now_playing']"/>
   <MovieList :list-name="'Top Rated'" :movie-items="movieItemsMap['top_rated']"/>
   <MovieList :list-name="'Upcoming'" :movie-items="movieItemsMap['upcoming']"/>
+
+  <Loading :isLoading="loading"/>
 </template>
 
 <script>
 import { ref, onMounted } from 'vue';
 import MovieList from "@/components/movie/MovieSlider.vue";
+import Loading from "@/components/Loading.vue";
 
 const url = 'https://api.themoviedb.org/3/movie/';
 const options = {
@@ -19,11 +22,14 @@ const options = {
 
 export default {
   name: "HomePage",
-  components: { MovieList },
+  components: { MovieList, Loading },
   setup() {
     const movieItemsMap = ref({});
+    const loading = ref(false);
 
     const fetchMovies = (pathParam) => {
+      loading.value = true;
+
       const language = "ko";
       const page = 1;
 
@@ -32,7 +38,10 @@ export default {
           .then(json => {
             movieItemsMap.value[pathParam] = json['results'];
           })
-          .catch(err => console.error(err));
+          .catch(err => console.error(err))
+          .finally(() => {
+            loading.value = false;
+          });
     };
 
     onMounted(() => {
@@ -41,7 +50,10 @@ export default {
       fetchMovies('upcoming');
     });
 
-    return { movieItemsMap };
+    return {
+      movieItemsMap,
+      loading,
+    };
   },
 };
 </script>

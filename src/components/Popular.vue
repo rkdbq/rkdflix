@@ -25,14 +25,13 @@
     </div>
   </div>
 
-  <div v-if="loading" class="loading-overlay">
-    <div class="loading-spinner">Loading...</div>
-  </div>
+  <Loading :isLoading="loading"/>
 </template>
 
 <script>
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import {onBeforeUnmount, onMounted, ref} from 'vue';
 import MovieGrid from "@/components/movie/MovieGrid.vue";
+import Loading from "@/components/Loading.vue";
 
 const url = 'https://api.themoviedb.org/3/movie/popular?language=ko&page=';
 const options = {
@@ -45,7 +44,7 @@ const options = {
 
 export default {
   name: "PopularMovie",
-  components: {MovieGrid},
+  components: {Loading, MovieGrid},
   setup() {
     const movieItems = ref([]);
     const currentPage = ref(1);
@@ -142,17 +141,6 @@ export default {
   justify-content: flex-end;
   margin: 16px;
 }
-.movie-grid-container {
-  display: flex;
-  justify-content: center;
-}
-.movie-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 16px;
-  width: 100%;
-  justify-items: center;
-}
 .pagination {
   display: flex;
   justify-content: center;
@@ -168,21 +156,5 @@ export default {
   padding: 10px 15px;
   border-radius: 5px;
   z-index: 1000;
-}
-.loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-.loading-spinner {
-  color: white;
-  font-size: 24px;
 }
 </style>

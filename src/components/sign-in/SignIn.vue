@@ -6,8 +6,8 @@
       <p style="color: red;">{{ emailError }}</p>
     </div>
     <div>
-      <label for="password">비밀번호:</label>
-      <input type="password" id="password" v-model="userPassword" />
+      <label for="pw">비밀번호:</label>
+      <input type="password" id="pw" v-model="userPw" />
     </div>
   </div>
 
@@ -18,16 +18,16 @@
       <p style="color: red;">{{ emailError }}</p>
     </div>
     <div>
-      <label for="password">비밀번호:</label>
-      <input type="password" id="password" v-model="userPasswordRegister" />
+      <label for="pw">비밀번호:</label>
+      <input type="password" id="pw" v-model="userPwRegister" />
     </div>
     <div>
-      <label for="password">비밀번호 확인:</label>
-      <input type="password" id="password-confirm" v-model="userPasswordConfirmRegister" />
-      <p style="color: red;">{{ passwordError }}</p>
+      <label for="pw">비밀번호 확인:</label>
+      <input type="password" id="pw-confirm" v-model="userPwConfirmRegister" />
+      <p style="color: red;">{{ pwError }}</p>
     </div>
     <div>
-      <label for="password">약관 동의: </label>
+      <label for="pw">약관 동의: </label>
       <input type="checkbox" id="condition-agreement" v-model="conditionAgreementRegister" />
     </div>
   </div>
@@ -56,15 +56,15 @@ export default {
     const buttonLabel = ref(["회원가입", "로그인"]);
 
     const userId = ref('');
-    const userPassword = ref('');
+    const userPw = ref('');
 
     const userIdRegister = ref('');
-    const userPasswordRegister = ref('');
-    const userPasswordConfirmRegister = ref('');
+    const userPwRegister = ref('');
+    const userPwConfirmRegister = ref('');
     const conditionAgreementRegister = ref(false);
 
     const emailError = ref('');
-    const passwordError = ref('');
+    const pwError = ref('');
 
     // Watchers
     watch(userId, (value) => {
@@ -73,10 +73,10 @@ export default {
     watch(userIdRegister, (value) => {
       checkEmail(value);
     });
-    watch(userPasswordRegister, () => {
+    watch(userPwRegister, () => {
       checkPassword();
     });
-    watch(userPasswordConfirmRegister, () => {
+    watch(userPwConfirmRegister, () => {
       checkPassword();
     });
 
@@ -84,14 +84,14 @@ export default {
       if (!userId.value) {
         alert('아이디를 입력해주세요.');
       }
-      if (!userPassword.value) {
+      if (!userPw.value) {
         alert('비밀번호를 입력해주세요.');
         return;
       }
 
       const user = JSON.parse(localStorage.getItem(userId.value));
 
-      if (!user || userPassword.value !== user['password']) {
+      if (!user || userPw.value !== user['password']) {
         alert('비밀번호가 일치하지 않습니다.');
         return;
       }
@@ -105,11 +105,11 @@ export default {
       isLogin.value = !isLogin.value;
 
       userId.value = '';
-      userPassword.value = '';
+      userPw.value = '';
 
       userIdRegister.value = '';
-      userPasswordRegister.value = '';
-      userPasswordConfirmRegister.value = '';
+      userPwRegister.value = '';
+      userPwConfirmRegister.value = '';
       conditionAgreementRegister.value = false;
     };
 
@@ -118,7 +118,7 @@ export default {
         alert('아이디를 입력해주세요.');
         return;
       }
-      if (!userPasswordRegister.value) {
+      if (!userPwRegister.value) {
         alert('비밀번호를 입력해주세요.');
         return;
       }
@@ -126,8 +126,8 @@ export default {
         alert(emailError.value);
         return;
       }
-      if (passwordError.value) {
-        alert(passwordError.value);
+      if (pwError.value) {
+        alert(pwError.value);
         return;
       }
       if (!conditionAgreementRegister.value) {
@@ -137,7 +137,7 @@ export default {
 
       alert('회원가입 성공!');
       const user = {
-        'password': userPasswordRegister.value,
+        'password': userPwRegister.value,
         'wishlist': {},
       }
       localStorage.setItem(userIdRegister.value, JSON.stringify(user));
@@ -150,22 +150,22 @@ export default {
     };
 
     const checkPassword = () => {
-      const pw = userPasswordRegister.value;
-      const pwConfirm = userPasswordConfirmRegister.value;
-      passwordError.value = pw !== pwConfirm ? "비밀번호가 다릅니다." : '';
+      const pw = userPwRegister.value;
+      const pwConfirm = userPwConfirmRegister.value;
+      pwError.value = pw !== pwConfirm ? "비밀번호가 다릅니다." : '';
     };
 
     return {
       isLogin,
       buttonLabel,
       userId,
-      userPassword,
+      userPw,
       userIdRegister,
-      userPasswordRegister,
-      userPasswordConfirmRegister,
+      userPwRegister,
+      userPwConfirmRegister,
       conditionAgreementRegister,
       emailError,
-      passwordError,
+      pwError,
       LogIn,
       Toggle,
       Register,

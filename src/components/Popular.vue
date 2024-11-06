@@ -31,7 +31,7 @@
 <script>
 import {onBeforeUnmount, onMounted, ref} from 'vue';
 import MovieGrid from "@/components/movie/MovieGrid.vue";
-import Loading from "@/components/Loading.vue";
+import Loading from "@/components/etc/Loading.vue";
 
 const url = 'https://api.themoviedb.org/3/movie/popular?language=ko&page=';
 const options = {

@@ -24,9 +24,9 @@
 
 <script>
 import { ref, reactive, onMounted, onBeforeUnmount } from "vue";
-import Filter from "@/components/filter/Filter.vue";
+import Filter from "@/components/etc/Filter.vue";
 import MovieGrid from "@/components/movie/MovieGrid.vue";
-import Loading from "@/components/Loading.vue";
+import Loading from "@/components/etc/Loading.vue";
 
 const url = 'https://api.themoviedb.org/3/discover/';
 const options = {

@@ -1,5 +1,5 @@
 <script>
-import MovieItem from "@/components/movie/MovieItem.vue";
+import MovieGrid from "@/components/movie/MovieGrid.vue";
 
 const url = 'https://api.themoviedb.org/3/movie/popular?language=ko&page=';
 const options = {
@@ -12,7 +12,7 @@ const options = {
 
 export default {
   name: "PopularMovie",
-  components: {MovieItem},
+  components: {MovieGrid},
   data() {
     return {
       movieItems: [],
@@ -107,20 +107,7 @@ export default {
   </div>
 
   <div v-if="viewOption === 'grid'">
-    <div class="movie-grid-container">
-      <div class="movie-grid">
-        <MovieItem
-            v-for="item in movieItems"
-            :key="item['id']"
-            :id="item['id']"
-            :posterPath="item['poster_path']"
-            :voteAverage="item['vote_average']"
-            :overview="item['overview']"
-            :title="item['title']"
-            :show-info="false"
-        />
-      </div>
-    </div>
+    <MovieGrid :movie-items="movieItems"/>
     <div class="pagination">
       <button @click="prevPage" :disabled="currentPage === 1">Previous</button>
       <span>Page {{ currentPage }}</span>
@@ -129,17 +116,7 @@ export default {
   </div>
 
   <div v-if="viewOption === 'scroll'">
-    <div class="movie-grid-container">
-      <div class="movie-grid">
-        <MovieItem
-            v-for="item in movieItems"
-            :key="item['id']"
-            :posterPath="item['poster_path']"
-            :voteAverage="item['vote_average']"
-        />
-      </div>
-    </div>
-
+    <MovieGrid :movie-items="movieItems"/>
     <div class="go-top-button">
       <button @click="goTop">Top</button>
     </div>

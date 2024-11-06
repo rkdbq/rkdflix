@@ -1,6 +1,6 @@
 <script>
-import MovieItem from "@/components/movie/MovieItem.vue";
 import Filter from "@/components/Filter.vue";
+import MovieGrid from "@/components/movie/MovieGrid.vue";
 
 const url = 'https://api.themoviedb.org/3/discover/';
 const options = {
@@ -13,7 +13,7 @@ const options = {
 
 export default {
   name: "SearchMovie",
-  components: {Filter, MovieItem},
+  components: {MovieGrid, Filter},
   data() {
     return {
       movieItems: [],
@@ -165,20 +165,7 @@ export default {
     />
     <button @click="resetFilters" class="reset-button">초기화</button>
 
-    <div class="movie-grid-container">
-      <div class="movie-grid">
-        <MovieItem
-            v-for="item in movieItems"
-            :key="item['id']"
-            :id="item['id']"
-            :posterPath="item['poster_path']"
-            :title="item['title']"
-            :voteAverage="item['vote_average']"
-            :overview="item['overview']"
-            :show-info="false"
-        />
-      </div>
-    </div>
+    <MovieGrid :movie-items="movieItems"/>
 
     <div class="go-top-button">
       <button @click="goTop">Top</button>

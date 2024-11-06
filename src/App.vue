@@ -1,12 +1,12 @@
 <template>
   <header>
-    <nav v-if="$route.path !== '/signin'">
+    <nav v-if="!isSignInRoute">
       <RouterLink class="nav-item" to="/">Home</RouterLink>
       <RouterLink class="nav-item" to="/popular">Popular</RouterLink>
       <RouterLink class="nav-item" to="/search">Search</RouterLink>
       <RouterLink class="nav-item" to="/wishlist">Wishlist</RouterLink>
     </nav>
-    <nav v-if="$route.path !== '/signin'">
+    <nav v-if="!isSignInRoute">
       <RouterLink class="nav-item" to="/signin">Log Out</RouterLink>
     </nav>
   </header>
@@ -15,12 +15,12 @@
   </main>
 </template>
 
-<script>
-export default {
-  name: 'App',
-  components: {
-  }
-}
+<script setup>
+import { useRoute } from 'vue-router';
+import { computed } from 'vue';
+
+const route = useRoute();
+const isSignInRoute = computed(() => route.path === '/signin');
 </script>
 
 <style>

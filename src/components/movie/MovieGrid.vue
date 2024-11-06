@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import {defineComponent} from 'vue';
+import { defineComponent } from 'vue';
 import MovieItem from "@/components/movie/MovieItem.vue";
 
 export default defineComponent({

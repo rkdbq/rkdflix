@@ -37,115 +37,139 @@
     <button v-if="!isLogin" @click="Register">회원가입</button>
   </div>
   <div>
-    <button @click="Toggle">{{ this.buttonLabel[Number(!this.isLogin)] }}하기</button>
+    <button @click="Toggle">{{ buttonLabel[Number(!isLogin)] }}하기</button>
   </div>
 </template>
 
 <script>
+import { ref, watch } from 'vue';
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
+
 export default {
   name: "SignIn",
-  data() {
-    return {
-      isLogin: true,
-      buttonLabel: ["회원가입", "로그인"],
+  setup() {
+    const store = useStore();
+    const router = useRouter();
 
-      userId: '',
-      userPassword: '',
+    const isLogin = ref(true);
+    const buttonLabel = ref(["회원가입", "로그인"]);
 
-      userIdRegister: '',
-      userPasswordRegister: '',
-      userPasswordConfirmRegister: '',
-      conditionAgreementRegister: false,
+    const userId = ref('');
+    const userPassword = ref('');
 
-      emailError: '',
-      passwordError: '',
-    }
-  },
-  watch: {
-    userId(value) {
-      this.checkEmail(value);
-    },
-    userIdRegister(value) {
-      this.checkEmail(value);
-    },
-    userPasswordRegister() {
-      this.checkPassword();
-    },
-    userPasswordConfirmRegister() {
-      this.checkPassword();
-    }
-  },
-  methods: {
-    LogIn() {
-      if(!this.userId) {
+    const userIdRegister = ref('');
+    const userPasswordRegister = ref('');
+    const userPasswordConfirmRegister = ref('');
+    const conditionAgreementRegister = ref(false);
+
+    const emailError = ref('');
+    const passwordError = ref('');
+
+    // Watchers
+    watch(userId, (value) => {
+      checkEmail(value);
+    });
+    watch(userIdRegister, (value) => {
+      checkEmail(value);
+    });
+    watch(userPasswordRegister, () => {
+      checkPassword();
+    });
+    watch(userPasswordConfirmRegister, () => {
+      checkPassword();
+    });
+
+    const LogIn = () => {
+      if (!userId.value) {
         alert('아이디를 입력해주세요.');
       }
-      if (!this.userPassword) {
+      if (!userPassword.value) {
         alert('비밀번호를 입력해주세요.');
         return;
       }
 
-      const user = JSON.parse(localStorage.getItem(this.userId));
+      const user = JSON.parse(localStorage.getItem(userId.value));
 
-      if(!user || this.userPassword !== user['password']) {
+      if (!user || userPassword.value !== user['password']) {
         alert('비밀번호가 일치하지 않습니다.');
         return;
       }
 
       alert('로그인 성공!');
-      this.$store.commit('setUser', { userId: this.userId, password: user['password'], wishlist: user['wishlist'] });
-      this.$router.push('/');
-    },
-    Toggle() {
-      this.isLogin = !this.isLogin;
+      store.commit('setUser', { userId: userId.value, password: user['password'], wishlist: user['wishlist'] });
+      router.push('/');
+    };
 
-      this.userId = '';
-      this.userPassword = '';
+    const Toggle = () => {
+      isLogin.value = !isLogin.value;
 
-      this.userIdRegister = '';
-      this.userPasswordRegister = '';
-      this.userPasswordConfirmRegister = '';
-      this.conditionAgreementRegister = false;
-    },
-    Register() {
-      if (!this.userIdRegister) {
+      userId.value = '';
+      userPassword.value = '';
+
+      userIdRegister.value = '';
+      userPasswordRegister.value = '';
+      userPasswordConfirmRegister.value = '';
+      conditionAgreementRegister.value = false;
+    };
+
+    const Register = () => {
+      if (!userIdRegister.value) {
         alert('아이디를 입력해주세요.');
         return;
       }
-      if (!this.userPasswordRegister) {
+      if (!userPasswordRegister.value) {
         alert('비밀번호를 입력해주세요.');
         return;
       }
-      if (this.emailError) {
-        alert(this.emailError);
+      if (emailError.value) {
+        alert(emailError.value);
         return;
       }
-      if (this.passwordError) {
-        alert(this.passwordError);
+      if (passwordError.value) {
+        alert(passwordError.value);
         return;
       }
-      if (!this.conditionAgreementRegister) {
+      if (!conditionAgreementRegister.value) {
         alert('약관에 동의해주세요.');
         return;
       }
 
       alert('회원가입 성공!');
       const user = {
-        'password': this.userPasswordRegister,
+        'password': userPasswordRegister.value,
         'wishlist': {},
       }
-      localStorage.setItem(this.userIdRegister, JSON.stringify(user));
-      this.Toggle();
-    },
-    checkEmail(email) {
+      localStorage.setItem(userIdRegister.value, JSON.stringify(user));
+      Toggle();
+    };
+
+    const checkEmail = (email) => {
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      this.emailError = email && !emailPattern.test(email) ? "유효한 이메일 형식이 아닙니다." : '';
-    },
-    checkPassword() {
-      const pw = this.userPasswordRegister;
-      const pwConfirm = this.userPasswordConfirmRegister;
-      this.passwordError = pw !== pwConfirm ? "비밀번호가 다릅니다." : '';
-    }
+      emailError.value = email && !emailPattern.test(email) ? "유효한 이메일 형식이 아닙니다." : '';
+    };
+
+    const checkPassword = () => {
+      const pw = userPasswordRegister.value;
+      const pwConfirm = userPasswordConfirmRegister.value;
+      passwordError.value = pw !== pwConfirm ? "비밀번호가 다릅니다." : '';
+    };
+
+    return {
+      isLogin,
+      buttonLabel,
+      userId,
+      userPassword,
+      userIdRegister,
+      userPasswordRegister,
+      userPasswordConfirmRegister,
+      conditionAgreementRegister,
+      emailError,
+      passwordError,
+      LogIn,
+      Toggle,
+      Register,
+    };
   },
 }
 </script>

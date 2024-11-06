@@ -1,3 +1,46 @@
+<template>
+  <div v-if="isLogin" class="sign-in-container">
+    <div>
+      <label for="id">아이디:</label>
+      <input type="text" id="id" v-model="userId" />
+      <p style="color: red;">{{ emailError }}</p>
+    </div>
+    <div>
+      <label for="password">비밀번호:</label>
+      <input type="password" id="password" v-model="userPassword" />
+    </div>
+  </div>
+
+  <div v-if="!isLogin" class="register-container">
+    <div>
+      <label for="id">아이디:</label>
+      <input type="text" id="id" v-model="userIdRegister" />
+      <p style="color: red;">{{ emailError }}</p>
+    </div>
+    <div>
+      <label for="password">비밀번호:</label>
+      <input type="password" id="password" v-model="userPasswordRegister" />
+    </div>
+    <div>
+      <label for="password">비밀번호 확인:</label>
+      <input type="password" id="password-confirm" v-model="userPasswordConfirmRegister" />
+      <p style="color: red;">{{ passwordError }}</p>
+    </div>
+    <div>
+      <label for="password">약관 동의: </label>
+      <input type="checkbox" id="condition-agreement" v-model="conditionAgreementRegister" />
+    </div>
+  </div>
+
+  <div>
+    <button v-if="isLogin" @click="LogIn">로그인</button>
+    <button v-if="!isLogin" @click="Register">회원가입</button>
+  </div>
+  <div>
+    <button @click="Toggle">{{ this.buttonLabel[Number(!this.isLogin)] }}하기</button>
+  </div>
+</template>
+
 <script>
 export default {
   name: "SignIn",
@@ -106,49 +149,6 @@ export default {
   },
 }
 </script>
-
-<template>
-  <div v-if="isLogin" class="sign-in-container">
-    <div>
-      <label for="id">아이디:</label>
-      <input type="text" id="id" v-model="userId" />
-      <p style="color: red;">{{ emailError }}</p>
-    </div>
-    <div>
-      <label for="password">비밀번호:</label>
-      <input type="password" id="password" v-model="userPassword" />
-    </div>
-  </div>
-
-  <div v-if="!isLogin" class="register-container">
-    <div>
-      <label for="id">아이디:</label>
-      <input type="text" id="id" v-model="userIdRegister" />
-      <p style="color: red;">{{ emailError }}</p>
-    </div>
-    <div>
-      <label for="password">비밀번호:</label>
-      <input type="password" id="password" v-model="userPasswordRegister" />
-    </div>
-    <div>
-      <label for="password">비밀번호 확인:</label>
-      <input type="password" id="password-confirm" v-model="userPasswordConfirmRegister" />
-      <p style="color: red;">{{ passwordError }}</p>
-    </div>
-    <div>
-      <label for="password">약관 동의: </label>
-      <input type="checkbox" id="condition-agreement" v-model="conditionAgreementRegister" />
-    </div>
-  </div>
-
-  <div>
-    <button v-if="isLogin" @click="LogIn">로그인</button>
-    <button v-if="!isLogin" @click="Register">회원가입</button>
-  </div>
-  <div>
-    <button @click="Toggle">{{ this.buttonLabel[Number(!this.isLogin)] }}하기</button>
-  </div>
-</template>
 
 <style scoped>
 div {

@@ -34,28 +34,50 @@ export default {
   },
   methods: {
     LogIn() {
-      console.log("ID:", this.userId);
-      console.log("Password:", this.userPassword);
-
-      this.$router.push('/')
-    },
-    Toggle() {
-      this.isLogin = !this.isLogin;
-    },
-    Register() {
-      if (this.userIdRegister === '') {
+      if(!this.userId) {
         alert('아이디를 입력해주세요.');
-        return;
       }
-      if (this.userPasswordRegister === '') {
+      if (!this.userPassword) {
         alert('비밀번호를 입력해주세요.');
         return;
       }
-      if (this.emailError !== '') {
+
+      const user = JSON.parse(localStorage.getItem(this.userId));
+
+      if(this.userPassword !== user['password']) {
+        alert('비밀번호가 일치하지 않습니다.');
+        return;
+      }
+
+      alert('로그인 성공!');
+      this.$store.commit('setUser', { userId: this.userId, wishlist: user['wishlist'] });
+      this.$router.push('/');
+    },
+    Toggle() {
+      this.isLogin = !this.isLogin;
+
+      this.userId = '';
+      this.userPassword = '';
+
+      this.userIdRegister = '';
+      this.userPasswordRegister = '';
+      this.userPasswordConfirmRegister = '';
+      this.conditionAgreementRegister = false;
+    },
+    Register() {
+      if (!this.userIdRegister) {
+        alert('아이디를 입력해주세요.');
+        return;
+      }
+      if (!this.userPasswordRegister) {
+        alert('비밀번호를 입력해주세요.');
+        return;
+      }
+      if (this.emailError) {
         alert(this.emailError);
         return;
       }
-      if (this.passwordError !== '') {
+      if (this.passwordError) {
         alert(this.passwordError);
         return;
       }
@@ -64,16 +86,13 @@ export default {
         return;
       }
 
-      console.log("Register:", this.userIdRegister);
-      console.log("Register:", this.userPasswordRegister);
-      console.log("Register:", this.userPasswordConfirmRegister);
-      console.log("Register:", this.conditionAgreementRegister);
-
+      alert('회원가입 성공!');
+      const user = {
+        'password': this.userPasswordRegister,
+        'wishlist': {},
+      }
+      localStorage.setItem(this.userIdRegister, JSON.stringify(user));
       this.Toggle();
-      this.userIdRegister = '';
-      this.userPasswordRegister = '';
-      this.userPasswordConfirmRegister = '';
-      this.conditionAgreementRegister = false;
     },
     checkEmail(email) {
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

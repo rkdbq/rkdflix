@@ -19,6 +19,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.$store.state.user);
     this.fetchMovies('now_playing');
     this.fetchMovies('top_rated');
     this.fetchMovies('upcoming');

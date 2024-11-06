@@ -3,7 +3,7 @@ const url = "https://image.tmdb.org/t/p/original"
 
 export default {
   name: "MovieItem",
-  props: ['title', 'posterPath', 'overview', 'voteAverage'],
+  props: ['id', 'title', 'posterPath', 'overview', 'voteAverage'],
   computed: {
     posterUrl() {
       return url + this.posterPath
@@ -35,12 +35,26 @@ export default {
           ? this.overview.substring(0, 50) + '...'
           : this.overview;
     },
+  },
+  methods: {
+    toggleToWishlist() {
+      const movieItem = {
+        id: this.id,
+        title: this.title,
+        posterPath: this.posterPath,
+        overview: this.overview,
+        voteAverage: this.voteAverage,
+      };
+      console.log(movieItem);
+      this.$store.dispatch('toggleMovieInWishlist', movieItem);
+      console.log(this.$store.state.user);
+    }
   }
 }
 </script>
 
 <template>
-  <div class="movie-item">
+  <div class="movie-item" @click="toggleToWishlist">
     <div class="poster-container">
       <img :src="posterUrl" :alt="title" />
       <p :style="voteAverageStyle" class="vote-box">{{ roundedVoteAverage }}</p>

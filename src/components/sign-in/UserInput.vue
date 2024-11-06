@@ -33,3 +33,18 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+div {
+  margin-bottom: 10px;
+}
+
+label {
+  margin-right: 8px;
+}
+
+input {
+  padding: 5px;
+  font-size: 14px;
+}
+</style>

@@ -1,5 +1,5 @@
 <script>
-import MovieList from "@/components/MovieList.vue";
+import MovieList from "@/components/movie/MovieList.vue";
 
 const url = 'https://api.themoviedb.org/3/movie/';
 const options = {

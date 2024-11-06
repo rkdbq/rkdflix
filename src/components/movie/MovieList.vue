@@ -18,7 +18,7 @@
   </div>
 </template>
 <script>
-import MovieItem from "@/components/MovieItem.vue"
+import MovieItem from "@/components/movie/MovieItem.vue"
 
 export default {
   name: 'MovieList',

@@ -1,5 +1,5 @@
 <script>
-import MovieItem from "@/components/MovieItem.vue";
+import MovieItem from "@/components/movie/MovieItem.vue";
 
 const url = 'https://api.themoviedb.org/3/movie/popular?language=en-US&page=';
 const options = {

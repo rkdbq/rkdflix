@@ -7,6 +7,7 @@
         <MovieItem
             v-for="item in movieItems"
             :key="item['id']"
+            :id="item['id']"
             :title="item['title']"
             :posterPath="item['poster_path']"
             :overview="item['overview']"
@@ -18,7 +19,7 @@
   </div>
 </template>
 <script>
-import MovieItem from "@/components/MovieItem.vue"
+import MovieItem from "@/components/movie/MovieItem.vue"
 
 export default {
   name: 'MovieList',

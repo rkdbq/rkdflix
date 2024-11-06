@@ -1,5 +1,5 @@
 <script>
-import MovieList from "@/components/MovieList.vue";
+import MovieList from "@/components/movie/MovieList.vue";
 
 const url = 'https://api.themoviedb.org/3/movie/';
 const options = {
@@ -15,7 +15,7 @@ export default {
   components: {MovieList},
   data() {
     return {
-      MovieItemsMap: {},
+      movieItemsMap: {},
     }
   },
   mounted() {
@@ -31,16 +31,16 @@ export default {
       fetch(`${url}${pathParam}?language=${language}&page=${page}`, options)
           .then(res => res.json())
           .then(json => {
-            this.MovieItemsMap[pathParam] = json['results'];
+            this.movieItemsMap[pathParam] = json['results'];
           })
           .catch(err => console.error(err));
     },
-  }
+  },
 }
 </script>
 
 <template>
-  <MovieList :list-name="'Now Playing'" :movie-items="MovieItemsMap['now_playing']"/>
-  <MovieList :list-name="'Top Rated'" :movie-items="MovieItemsMap['top_rated']"/>
-  <MovieList :list-name="'Upcoming'" :movie-items="MovieItemsMap['upcoming']"/>
+  <MovieList :list-name="'Now Playing'" :movie-items="movieItemsMap['now_playing']"/>
+  <MovieList :list-name="'Top Rated'" :movie-items="movieItemsMap['top_rated']"/>
+  <MovieList :list-name="'Upcoming'" :movie-items="movieItemsMap['upcoming']"/>
 </template>

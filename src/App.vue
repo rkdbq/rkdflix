@@ -1,18 +1,15 @@
 <template>
   <header>
-    <nav v-if="$route.path !== '/sign-in'">
+    <nav v-if="$route.path !== '/signin'">
       <RouterLink class="nav-item" to="/">Home</RouterLink>
       <RouterLink class="nav-item" to="/popular">Popular</RouterLink>
       <RouterLink class="nav-item" to="/search">Search</RouterLink>
       <RouterLink class="nav-item" to="/wishlist">Wishlist</RouterLink>
     </nav>
-    <nav v-if="$route.path !== '/sign-in'">
+    <nav v-if="$route.path !== '/signin'">
       <RouterLink class="nav-item" to="/signin">Log Out</RouterLink>
     </nav>
   </header>
-  <p>
-    <strong>Current route path:</strong> {{ $route.fullPath }}
-  </p>
   <main>
     <RouterView />
   </main>

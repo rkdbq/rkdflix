@@ -1,7 +1,7 @@
 <script>
 import MovieItem from "@/components/movie/MovieItem.vue";
 
-const url = 'https://api.themoviedb.org/3/movie/popular?language=en-US&page=';
+const url = 'https://api.themoviedb.org/3/movie/popular?language=ko&page=';
 const options = {
   method: 'GET',
   headers: {
@@ -112,8 +112,12 @@ export default {
         <MovieItem
             v-for="item in movieItems"
             :key="item['id']"
+            :id="item['id']"
             :posterPath="item['poster_path']"
             :voteAverage="item['vote_average']"
+            :overview="item['overview']"
+            :title="item['title']"
+            :show-info="false"
         />
       </div>
     </div>

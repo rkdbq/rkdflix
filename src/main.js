@@ -27,7 +27,7 @@ const store = createStore({
         return {
             user: {
                 userId: null,
-                wishlist: Array,
+                wishlist: {},
             },
         };
     },
@@ -37,20 +37,17 @@ const store = createStore({
         },
         toggleToWishlist(state, movieItem) {
             const id = movieItem['id'];
-            delete movieItem['id'];
-
             if (state.user.wishlist[id]) {
                 delete state.user.wishlist[id];
             }
             else {
                 state.user.wishlist[id] = movieItem;
             }
-            console.log(state.user);
+            console.log(state.user.wishlist[id]);
         }
     },
     actions: {
         toggleMovieInWishlist({ commit }, movieItem) {
-            console.log(movieItem);
             commit('toggleToWishlist', movieItem);
         }
     }

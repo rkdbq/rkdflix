@@ -170,8 +170,12 @@ export default {
         <MovieItem
             v-for="item in movieItems"
             :key="item['id']"
+            :id="item['id']"
             :posterPath="item['poster_path']"
+            :title="item['title']"
             :voteAverage="item['vote_average']"
+            :overview="item['overview']"
+            :show-info="false"
         />
       </div>
     </div>

@@ -3,7 +3,14 @@ const url = "https://image.tmdb.org/t/p/original"
 
 export default {
   name: "MovieItem",
-  props: ['id', 'title', 'posterPath', 'overview', 'voteAverage'],
+  props: {
+    id: Number,
+    title: String,
+    posterPath: String,
+    overview: String,
+    voteAverage: Number,
+    showInfo: Boolean,
+  },
   computed: {
     posterUrl() {
       return url + this.posterPath
@@ -35,19 +42,21 @@ export default {
           ? this.overview.substring(0, 50) + '...'
           : this.overview;
     },
+    isInWishlist() {
+      // 이 영화가 위시리스트에 포함되어 있는지 확인
+      return this.$store.state.user.wishlist[this.id];
+    }
   },
   methods: {
     toggleToWishlist() {
       const movieItem = {
         id: this.id,
         title: this.title,
-        posterPath: this.posterPath,
+        poster_path: this.posterPath,
         overview: this.overview,
-        voteAverage: this.voteAverage,
+        vote_average: this.voteAverage,
       };
-      console.log(movieItem);
       this.$store.dispatch('toggleMovieInWishlist', movieItem);
-      console.log(this.$store.state.user);
     }
   }
 }
@@ -55,18 +64,21 @@ export default {
 
 <template>
   <div class="movie-item" @click="toggleToWishlist">
-    <div class="poster-container">
+    <div class="poster-container" :class="{'in-wishlist': isInWishlist}">
       <img :src="posterUrl" :alt="title" />
       <p :style="voteAverageStyle" class="vote-box">{{ roundedVoteAverage }}</p>
     </div>
-    <p class="title" v-if="title">{{ title }}</p>
-    <p v-if="overview">{{truncatedOverview}}</p>
+    <p class="title" v-if="showInfo">{{ title }}</p>
+    <p v-if="showInfo">{{truncatedOverview}}</p>
   </div>
 </template>
 
 <style scoped>
 .movie-item {
   width: 200px; /* 카드 너비 */
+}
+.movie-item:hover {
+  transform: scale(1.05);
 }
 img {
   width: 200px; /* 원하는 너비 */
@@ -77,6 +89,9 @@ img {
 .poster-container {
   position: relative;
   width: 100%;
+}
+.poster-container.in-wishlist {
+  border: 2px solid gold; /* 위시리스트에 추가된 영화에 금색 테두리 적용 */
 }
 .vote-box {
   position: absolute;

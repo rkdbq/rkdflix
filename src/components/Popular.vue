@@ -1,100 +1,3 @@
-<script>
-import MovieGrid from "@/components/movie/MovieGrid.vue";
-
-const url = 'https://api.themoviedb.org/3/movie/popular?language=ko&page=';
-const options = {
-  method: 'GET',
-  headers: {
-    accept: 'application/json',
-    Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjMGIyYzM0Mzg5NDRjOWZhM2Y1OGM4ZWVhMTMwZmQ3MiIsIm5iZiI6MTczMDYwMDUxNy45MDUxNjQ3LCJzdWIiOiI2NzI2ZGQ5ZDU3NzIyYjU1NzE3YTk1NzMiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.Lp6uHXXLkMDL02Ry0-3d_9niajSqhWRNcJbW2tnsXyw'
-  }
-};
-
-export default {
-  name: "PopularMovie",
-  components: {MovieGrid},
-  data() {
-    return {
-      movieItems: [],
-      currentPage: 1,
-      viewOption: "grid",
-      isScrollListening: true,
-      loading: false
-    }
-  },
-  mounted() {
-    this.fetchPopularMovies(this.currentPage);
-    window.addEventListener('scroll', this.handleScroll); // 스크롤 이벤트 리스너 추가
-  },
-  beforeUnmount() {
-    window.removeEventListener('scroll', this.handleScroll);
-  },
-  methods: {
-    fetchPopularMovies(page) {
-      this.loading = true;
-      if(this.viewOption === "grid") {
-        fetch(`${url}${page}`, options)
-            .then(res => res.json())
-            .then(json => {
-              this.movieItems = json['results'];
-            })
-            .catch(err => console.error(err))
-            .finally(() => {
-              this.loading = false;
-            });
-      }
-      else {
-        fetch(`${url}${page}`, options)
-            .then(res => res.json())
-            .then(json => {
-              this.movieItems.push(...json['results']);
-            })
-            .catch(err => console.error(err))
-            .finally(() => {
-              this.loading = false;
-            })
-      }
-    },
-    nextPage() {
-      this.fetchPopularMovies(++this.currentPage);
-    },
-    prevPage() {
-      if (this.currentPage > 1) {
-        this.fetchPopularMovies(--this.currentPage);
-      }
-    },
-    goTop() {
-      window.scrollTo(0, 0);
-    },
-    setViewOption(option) {
-      this.viewOption = option; // 선택된 옵션 설정
-      this.currentPage = 1; // 페이지를 1로 초기화
-      this.fetchPopularMovies(this.currentPage); // 영화 목록 새로 고침
-    },
-    handleScroll() {
-      if (this.isScrollListening && this.viewOption === "scroll") {
-        // 문서의 높이와 현재 스크롤 위치를 계산
-        const scrollTop = window.scrollY;
-        const windowHeight = window.innerHeight;
-        const documentHeight = document.documentElement.scrollHeight;
-
-        // 최하단에 도달했을 때 다음 페이지를 로드
-        if (scrollTop + windowHeight >= documentHeight - 5) {
-          this.isScrollListening = false;
-          this.currentPage++;
-          this.fetchPopularMovies(this.currentPage);
-
-          // 1초 후에 리스닝을 재개
-          setTimeout(() => {
-            this.isScrollListening = true;
-          }, 1000);
-        }
-      }
-    },
-  }
-}
-</script>
-
 <template>
   <h1>Popular</h1>
   <div class="select-view-container">
@@ -127,6 +30,112 @@ export default {
   </div>
 </template>
 
+<script>
+import { ref, onMounted, onBeforeUnmount } from 'vue';
+import MovieGrid from "@/components/movie/MovieGrid.vue";
+
+const url = 'https://api.themoviedb.org/3/movie/popular?language=ko&page=';
+const options = {
+  method: 'GET',
+  headers: {
+    accept: 'application/json',
+    Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjMGIyYzM0Mzg5NDRjOWZhM2Y1OGM4ZWVhMTMwZmQ3MiIsIm5iZiI6MTczMDYwMDUxNy45MDUxNjQ3LCJzdWIiOiI2NzI2ZGQ5ZDU3NzIyYjU1NzE3YTk1NzMiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.Lp6uHXXLkMDL02Ry0-3d_9niajSqhWRNcJbW2tnsXyw'
+  }
+};
+
+export default {
+  name: "PopularMovie",
+  components: {MovieGrid},
+  setup() {
+    const movieItems = ref([]);
+    const currentPage = ref(1);
+    const viewOption = ref("grid");
+    const isScrollListening = ref(true);
+    const loading = ref(false);
+
+    const fetchPopularMovies = (page) => {
+      loading.value = true;
+      const endpoint = `${url}${page}`;
+
+      fetch(endpoint, options)
+          .then(res => res.json())
+          .then(json => {
+            if (viewOption.value === "grid") {
+              movieItems.value = json['results'];
+            } else {
+              movieItems.value.push(...json['results']);
+            }
+          })
+          .catch(err => console.error(err))
+          .finally(() => {
+            loading.value = false;
+          });
+    };
+
+    const nextPage = () => {
+      currentPage.value++;
+      fetchPopularMovies(currentPage.value);
+    };
+
+    const prevPage = () => {
+      if (currentPage.value > 1) {
+        currentPage.value--;
+        fetchPopularMovies(currentPage.value);
+      }
+    };
+
+    const goTop = () => {
+      window.scrollTo(0, 0);
+    };
+
+    const setViewOption = (option) => {
+      viewOption.value = option;
+      currentPage.value = 1;
+      fetchPopularMovies(currentPage.value);
+    };
+
+    const handleScroll = () => {
+      if (isScrollListening.value && viewOption.value === "scroll") {
+        const scrollTop = window.scrollY;
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight;
+
+        if (scrollTop + windowHeight >= documentHeight - 5) {
+          isScrollListening.value = false;
+          currentPage.value++;
+          fetchPopularMovies(currentPage.value);
+
+          setTimeout(() => {
+            isScrollListening.value = true;
+          }, 1000);
+        }
+      }
+    };
+
+    onMounted(() => {
+      fetchPopularMovies(currentPage.value);
+      window.addEventListener('scroll', handleScroll);
+    });
+
+    onBeforeUnmount(() => {
+      window.removeEventListener('scroll', handleScroll);
+    });
+
+    return {
+      movieItems,
+      currentPage,
+      viewOption,
+      isScrollListening,
+      loading,
+      nextPage,
+      prevPage,
+      goTop,
+      setViewOption,
+    };
+  },
+};
+</script>
+
 <style scoped>
 .select-view-container {
   display: flex;
@@ -138,7 +147,7 @@ export default {
   justify-content: center;
 }
 .movie-grid {
-  display: grid; /* 그리드 레이아웃 사용 */
+  display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 16px;
   width: 100%;
@@ -153,27 +162,27 @@ export default {
   margin: 0 10px;
 }
 .go-top-button {
-  position: fixed; /* 화면에 고정 */
-  bottom: 20px; /* 하단에서 20px */
-  right: 20px; /* 우측에서 20px */
-  padding: 10px 15px; /* 패딩 */
-  border-radius: 5px; /* 모서리 둥글게 */
-  z-index: 1000; /* 다른 요소 위에 표시 */
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 15px;
+  border-radius: 5px;
+  z-index: 1000;
 }
 .loading-overlay {
-  position: fixed; /* 화면에 고정 */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  justify-content: center; /* 중앙 정렬 */
-  align-items: center; /* 중앙 정렬 */
-  z-index: 1000; /* 다른 요소 위에 표시 */
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 .loading-spinner {
-  color: white; /* 글자 색상 */
-  font-size: 24px; /* 글자 크기 */
+  color: white;
+  font-size: 24px;
 }
 </style>

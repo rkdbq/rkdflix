@@ -1,3 +1,14 @@
+<template>
+  <div class="movie-item" @click="toggleToWishlist">
+    <div class="poster-container" :class="{'in-wishlist': isInWishlist}">
+      <img :src="posterUrl" :alt="title" />
+      <p :style="voteAverageStyle" class="vote-box">{{ roundedVoteAverage }}</p>
+    </div>
+    <p class="title" v-if="showInfo">{{ title }}</p>
+    <p v-if="showInfo">{{ truncatedOverview }}</p>
+  </div>
+</template>
+
 <script>
 import { computed, toRefs } from 'vue';
 import { useStore } from 'vuex';
@@ -74,17 +85,6 @@ export default {
   }
 };
 </script>
-
-<template>
-  <div class="movie-item" @click="toggleToWishlist">
-    <div class="poster-container" :class="{'in-wishlist': isInWishlist}">
-      <img :src="posterUrl" :alt="title" />
-      <p :style="voteAverageStyle" class="vote-box">{{ roundedVoteAverage }}</p>
-    </div>
-    <p class="title" v-if="showInfo">{{ title }}</p>
-    <p v-if="showInfo">{{ truncatedOverview }}</p>
-  </div>
-</template>
 
 <style scoped>
 .movie-item {

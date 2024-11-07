@@ -19,10 +19,7 @@
   </div>
 
   <div v-if="viewOption === 'scroll'">
-    <MovieGrid :movie-items="movieItems"/>
-    <div class="go-top-button">
-      <button @click="goTop">Top</button>
-    </div>
+    <MovieScrollView :go-top="goTop" :movie-items="movieItems"/>
   </div>
 
   <Loading :isLoading="loading"/>
@@ -32,6 +29,7 @@
 import {onBeforeUnmount, onMounted, ref} from 'vue';
 import MovieGrid from "@/components/movie/MovieGrid.vue";
 import Loading from "@/components/etc/Loading.vue";
+import MovieScrollView from "@/components/movie/MovieScrollView.vue";
 
 const url = 'https://api.themoviedb.org/3/movie/popular?language=ko&page=';
 const options = {
@@ -44,7 +42,7 @@ const options = {
 
 export default {
   name: "PopularMovie",
-  components: {Loading, MovieGrid},
+  components: {MovieScrollView, Loading, MovieGrid},
   setup() {
     const movieItems = ref([]);
     const currentPage = ref(1);

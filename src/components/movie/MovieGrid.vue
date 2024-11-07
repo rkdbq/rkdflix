@@ -9,7 +9,7 @@
           :voteAverage="item['vote_average']"
           :overview="item['overview']"
           :title="item['title']"
-          :show-info="false"
+          :show-info="showInfo"
       />
     </div>
   </div>
@@ -26,6 +26,10 @@ export default defineComponent({
     movieItems: {
       type: Array,
       required: true
+    },
+    showInfo: {
+      type: Boolean,
+      default: false,
     }
   },
 });

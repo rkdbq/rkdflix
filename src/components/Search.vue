@@ -12,21 +12,17 @@
     />
     <button @click="resetFilters" class="reset-button">초기화</button>
 
-    <MovieGrid :movie-items="movieItems"/>
-
-    <div class="go-top-button">
-      <button @click="goTop">Top</button>
-    </div>
+    <MovieScrollView :go-top="goTop" :movie-items="movieItems"/>
 
     <Loading :isLoading="loading"/>
   </div>
 </template>
 
 <script>
-import { ref, reactive, onMounted, onBeforeUnmount } from "vue";
+import {onBeforeUnmount, onMounted, reactive, ref} from "vue";
 import Filter from "@/components/etc/Filter.vue";
-import MovieGrid from "@/components/movie/MovieGrid.vue";
 import Loading from "@/components/etc/Loading.vue";
+import MovieScrollView from "@/components/movie/MovieScrollView.vue";
 
 const url = 'https://api.themoviedb.org/3/discover/';
 const options = {
@@ -39,7 +35,7 @@ const options = {
 
 export default {
   name: "SearchMovie",
-  components: { MovieGrid, Filter, Loading },
+  components: {MovieScrollView, Filter, Loading },
   setup() {
     const movieItems = ref([]);
     const currentPage = ref(1);
@@ -190,14 +186,6 @@ export default {
 </script>
 
 <style scoped>
-.go-top-button {
-  position: fixed; /* 화면에 고정 */
-  bottom: 20px; /* 하단에서 20px */
-  right: 20px; /* 우측에서 20px */
-  padding: 10px 15px; /* 패딩 */
-  border-radius: 5px; /* 모서리 둥글게 */
-  z-index: 1000; /* 다른 요소 위에 표시 */
-}
 .reset-button {
   width: 100px;
   margin: 16px;

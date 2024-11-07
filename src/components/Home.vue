@@ -1,14 +1,14 @@
 <template>
-  <MovieList :list-name="'Now Playing'" :movie-items="movieItemsMap['now_playing']"/>
-  <MovieList :list-name="'Top Rated'" :movie-items="movieItemsMap['top_rated']"/>
-  <MovieList :list-name="'Upcoming'" :movie-items="movieItemsMap['upcoming']"/>
+  <MovieSliderView :list-name="'Now Playing'" :movie-items="movieItemsMap['now_playing']"/>
+  <MovieSliderView :list-name="'Top Rated'" :movie-items="movieItemsMap['top_rated']"/>
+  <MovieSliderView :list-name="'Upcoming'" :movie-items="movieItemsMap['upcoming']"/>
 
   <Loading :isLoading="loading"/>
 </template>
 
 <script>
 import { ref, onMounted } from 'vue';
-import MovieList from "@/components/movie/MovieSlider.vue";
+import MovieSliderView from "@/components/movie/MovieSliderView.vue";
 import Loading from "@/components/etc/Loading.vue";
 
 const url = 'https://api.themoviedb.org/3/movie/';
@@ -22,7 +22,7 @@ const options = {
 
 export default {
   name: "HomePage",
-  components: { MovieList, Loading },
+  components: { MovieSliderView, Loading },
   setup() {
     const movieItemsMap = ref({});
     const loading = ref(false);

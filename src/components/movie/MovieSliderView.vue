@@ -25,7 +25,7 @@ import { defineComponent, ref, onMounted } from 'vue';
 import MovieItem from "@/components/movie/MovieItem.vue";
 
 export default defineComponent({
-  name: 'MovieList',
+  name: 'MovieSliderView',
   components: { MovieItem },
   props: {
     listName: {

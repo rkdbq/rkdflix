@@ -4,7 +4,6 @@
                :input-field="userId"
                :input-type="'text'"
                @on-changed="onIdChanged"
-               :validation-message="emailError"
     />
     <UserInput :field-name="'비밀번호'"
                :input-field="userPw"
@@ -17,8 +16,8 @@
     <UserInput :field-name="'아이디'"
                :input-field="userId"
                :input-type="'text'"
-               :validation-message="emailError"
                @on-changed="onIdChanged"
+               :validation-message="emailError"
     />
     <UserInput :field-name="'비밀번호'"
                :input-field="userPw"

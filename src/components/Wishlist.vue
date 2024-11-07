@@ -2,7 +2,7 @@
   <div>
     <h1>Wishlist</h1>
 
-    <MovieScrollView :go-top="goTop" :movie-items="wishlist" :show-info="true"/>
+    <MovieScrollView :go-top="goTop" :movie-items="wishlist" :show-info="false"/>
   </div>
 </template>
 

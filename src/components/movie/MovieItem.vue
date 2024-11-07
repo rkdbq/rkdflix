@@ -21,7 +21,10 @@ export default {
     id: Number,
     title: String,
     posterPath: String,
-    overview: String,
+    overview: {
+      type: String,
+      default: '',
+    },
     voteAverage: Number,
     showInfo: Boolean,
   },

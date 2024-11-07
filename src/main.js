@@ -14,7 +14,7 @@ const routes = [
     { path: '/popular', component: PopularMovie },
     { path: '/search', component: Search },
     { path: '/wishlist', component: Wishlist },
-    { path: '/signin', component: SignIn },
+    { path: '/sign-in', component: SignIn },
 ]
 
 const router = createRouter({
@@ -61,4 +61,4 @@ const store = createStore({
 });
 
 createApp(App).use(router).use(store).mount('#app');
-router.push('/signin');
+router.push('/sign-in');

@@ -12,7 +12,7 @@ import { ref, watch } from 'vue';
 export default {
   name: 'UserInput',
   props: {
-    fieldName: String, // 부모에서 전달된 value (v-model로 받은 값)
+    fieldName: String,
     inputField: String,
     inputType: String,
     validationMessage: String,

@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, onMounted } from 'vue';
+import { defineComponent, ref } from 'vue';
 import MovieItem from "@/components/movie/MovieItem.vue";
 
 export default defineComponent({
@@ -37,32 +37,25 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props) {
+  setup() {
     const slider = ref(null);
 
-    const nextSlide = () => {
+    // 공통된 scroll 기능을 하나의 함수로 추출
+    const scrollSlider = (direction) => {
       if (slider.value) {
         slider.value.scrollBy({
           top: 0,
-          left: slider.value.clientWidth,
-          behavior: 'smooth'
+          left: direction * slider.value.clientWidth,
+          behavior: 'smooth',
         });
       }
     };
 
-    const prevSlide = () => {
-      if (slider.value) {
-        slider.value.scrollBy({
-          top: 0,
-          left: -slider.value.clientWidth,
-          behavior: 'smooth'
-        });
-      }
-    };
+    // 다음 슬라이드로 이동
+    const nextSlide = () => scrollSlider(1);
 
-    onMounted(() => {
-      console.log(props.movieItems);
-    });
+    // 이전 슬라이드로 이동
+    const prevSlide = () => scrollSlider(-1);
 
     return {
       slider,
@@ -70,6 +63,7 @@ export default defineComponent({
       prevSlide,
     };
   }
+
 });
 </script>
 
@@ -91,7 +85,7 @@ export default defineComponent({
 }
 
 .movie-grid::-webkit-scrollbar {
-  display: none; /* Chrome/Safari용 */
+  display: none;
 }
 
 .arrow {

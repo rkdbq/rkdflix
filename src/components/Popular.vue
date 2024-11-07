@@ -10,7 +10,7 @@
   </div>
 
   <div v-if="viewOption === 'grid'">
-    <MovieTableView :current-page="currentPage" :movie-items="movieItems" :next-page="nextPage" :prev-page="prevPage"/>
+    <MovieTableView :table-page="tablePage" :index-from="indexFrom" :index-to="indexTo" :movie-items="movieItems" :next-page="nextPage" :prev-page="prevPage"/>
   </div>
 
   <div v-if="viewOption === 'scroll'">
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import {onBeforeUnmount, onMounted, ref} from 'vue';
+import {computed, onBeforeUnmount, onMounted, ref} from 'vue';
 import Loading from "@/components/etc/Loading.vue";
 import MovieScrollView from "@/components/movie/MovieScrollView.vue";
 import MovieTableView from "@/components/movie/MovieTableView.vue";
@@ -44,6 +44,13 @@ export default {
     const viewOption = ref("grid");
     const isScrollListening = ref(true);
     const loading = ref(false);
+    const indexFrom = ref(0);
+    const sliceSize = ref(10);
+    const tablePage = ref(1);
+
+    const indexTo = computed(() => {
+      return Number(indexFrom.value + sliceSize.value);
+    });
 
     const fetchPopularMovies = (page) => {
       loading.value = true;
@@ -52,11 +59,7 @@ export default {
       fetch(endpoint, options)
           .then(res => res.json())
           .then(json => {
-            if (viewOption.value === "grid") {
-              movieItems.value = json['results'];
-            } else {
-              movieItems.value.push(...json['results']);
-            }
+            movieItems.value.push(...json['results']);
           })
           .catch(err => console.error(err))
           .finally(() => {
@@ -65,14 +68,19 @@ export default {
     };
 
     const nextPage = () => {
-      currentPage.value++;
-      fetchPopularMovies(currentPage.value);
+      if (indexTo.value + sliceSize.value >= movieItems.value.length) {
+        currentPage.value++;
+        fetchPopularMovies(currentPage.value);
+      }
+
+      tablePage.value++;
+      indexFrom.value += sliceSize.value;
     };
 
     const prevPage = () => {
-      if (currentPage.value > 1) {
-        currentPage.value--;
-        fetchPopularMovies(currentPage.value);
+      if (tablePage.value > 1) {
+        tablePage.value--;
+        indexFrom.value -= sliceSize.value;
       }
     };
 
@@ -83,7 +91,13 @@ export default {
     const setViewOption = (option) => {
       viewOption.value = option;
       currentPage.value = 1;
+      tablePage.value = 1;
+      indexFrom.value = 0;
+
+      movieItems.value = [];
       fetchPopularMovies(currentPage.value);
+
+      document.body.style.overflow = option === "grid" ? 'hidden' : '';
     };
 
     const handleScroll = () => {
@@ -104,21 +118,35 @@ export default {
       }
     };
 
+    const updateSliceSize = () => {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      sliceSize.value = Math.floor(width / 205) * (Math.floor(height / 310) - 1);
+      sliceSize.value = Math.max(1, sliceSize.value);
+    };
+
     onMounted(() => {
       fetchPopularMovies(currentPage.value);
       window.addEventListener('scroll', handleScroll);
+
+      updateSliceSize();
     });
 
     onBeforeUnmount(() => {
       window.removeEventListener('scroll', handleScroll);
+      document.body.style.overflow = '';
     });
 
     return {
       movieItems,
-      currentPage,
       viewOption,
       isScrollListening,
       loading,
+      tablePage,
+      sliceSize,
+      indexFrom,
+      indexTo,
       nextPage,
       prevPage,
       goTop,
@@ -137,13 +165,5 @@ export default {
 
 .pagination button {
   margin: 0 10px;
-}
-.go-top-button {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  padding: 10px 15px;
-  border-radius: 5px;
-  z-index: 1000;
 }
 </style>

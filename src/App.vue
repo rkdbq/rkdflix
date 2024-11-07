@@ -8,7 +8,6 @@
     </nav>
     <nav class="nav-logout">
       <p class="nav-item">{{userId}} 님</p>
-<!--      <RouterLink class="nav-item" to="/signin">Log Out</RouterLink>-->
       <button class="nav-item" @click="LogOut">로그아웃</button>
     </nav>
   </header>
@@ -24,13 +23,13 @@ import { computed } from 'vue';
 
 const route = useRoute();
 const router = useRouter();
-const isSignInRoute = computed(() => route.path === '/signin');
+const isSignInRoute = computed(() => route.path === '/sign-in');
 
 const store = useStore();
 const userId = computed(() => store.state.user.userId);
 
 const LogOut = () => {
-  router.push('/signin');
+  router.push('/sign-in');
 }
 </script>
 

@@ -29,6 +29,7 @@ const store = useStore();
 const userId = computed(() => store.state.user.userId);
 
 const LogOut = () => {
+  localStorage.removeItem('remember_me');
   router.push('/sign-in');
 }
 </script>

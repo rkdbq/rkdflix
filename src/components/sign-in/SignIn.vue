@@ -10,6 +10,11 @@
                :input-type="'password'"
                @on-changed="onPwChanged"
     />
+    <UserInput :field-name="'자동 로그인'"
+               :input-field="rememberMe"
+               :input-type="'checkbox'"
+               @on-changed="onRememberMeChanged"
+    />
   </div>
 
   <div v-if="!isLogin" class="register-container">
@@ -47,7 +52,7 @@
 </template>
 
 <script>
-import {ref} from 'vue';
+import {onMounted, ref} from 'vue';
 import {useStore} from "vuex";
 import {useRouter} from "vue-router";
 import UserInput from "@/components/sign-in/UserInput.vue";
@@ -66,6 +71,7 @@ export default {
     const userPw = ref('');
     const userPwConfirm = ref('');
 
+    const rememberMe = ref(false);
     const userConditionAgreement = ref(false);
 
     const emailError = ref('');
@@ -88,6 +94,14 @@ export default {
       if (!user || userPw.value !== user['password']) {
         alert('비밀번호가 일치하지 않습니다.');
         return;
+      }
+
+      if(rememberMe.value) {
+        const rememberUser = {
+          id: userId.value,
+          password: userPw.value,
+        }
+        localStorage.setItem('remember_me', JSON.stringify(rememberUser));
       }
 
       alert('로그인 성공!');
@@ -161,9 +175,22 @@ export default {
       pwError.value = validatePw(userPw, userPwConfirm);
     }
 
+    const onRememberMeChanged = (args) => {
+      rememberMe.value = args[0].value;
+    }
+
     const onConditionAgreementChanged = (args) => {
       userConditionAgreement.value = args[0].value;
     }
+
+    onMounted(() => {
+      const rememberMe = JSON.parse(localStorage.getItem('remember_me'));
+      if (rememberMe) {
+        userId.value = rememberMe['id'];
+        userPw.value = rememberMe['password'];
+        LogIn();
+      }
+    })
 
     return {
       isLogin,
@@ -171,6 +198,7 @@ export default {
       userId,
       userPw,
       userPwConfirm,
+      rememberMe,
       userConditionAgreement,
       emailError,
       pwError,
@@ -181,6 +209,7 @@ export default {
       onIdChanged,
       onPwChanged,
       onPwConfirmChanged,
+      onRememberMeChanged,
       onConditionAgreementChanged
     };
   },

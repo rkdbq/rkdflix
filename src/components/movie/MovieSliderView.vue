@@ -12,7 +12,7 @@
             :posterPath="item['poster_path']"
             :overview="item['overview']"
             :voteAverage="item['vote_average']"
-            :show-info="true"
+            :show-info="false"
         />
       </div>
       <button @click="nextSlide" class="arrow right-arrow">❯</button>

@@ -1,4 +1,11 @@
 <template>
+  <MovieBanner
+      :id="firstMovie['now_playing']['id']"
+      :title="firstMovie['now_playing']['title']"
+      :backdrop-path="firstMovie['now_playing']['backdrop_path']"
+      :overview="firstMovie['now_playing']['overview']"
+  />
+
   <MovieSliderView :list-name="'Now Playing'" :movie-items="movieItemsMap['now_playing']"/>
   <MovieSliderView :list-name="'Top Rated'" :movie-items="movieItemsMap['top_rated']"/>
   <MovieSliderView :list-name="'Upcoming'" :movie-items="movieItemsMap['upcoming']"/>
@@ -7,9 +14,10 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
+import {ref, onMounted, reactive } from 'vue';
 import MovieSliderView from "@/components/movie/MovieSliderView.vue";
 import Loading from "@/components/etc/Loading.vue";
+import MovieBanner from "@/components/movie/MovieBanner.vue";
 
 const url = 'https://api.themoviedb.org/3/movie/';
 const options = {
@@ -22,9 +30,20 @@ const options = {
 
 export default {
   name: "HomePage",
-  components: { MovieSliderView, Loading },
+  components: {MovieBanner, MovieSliderView, Loading },
   setup() {
-    const movieItemsMap = ref({});
+    const movieItemsMap = reactive({
+          'now_playing': [],
+          'top_rated': [],
+          'upcoming': [],
+        },
+    );
+    const firstMovie = reactive({
+          'now_playing': {},
+          'top_rated': {},
+          'upcoming': {},
+        },
+    );
     const loading = ref(false);
 
     const fetchMovies = (pathParam) => {
@@ -36,7 +55,8 @@ export default {
       fetch(`${url}${pathParam}?language=${language}&page=${page}`, options)
           .then(res => res.json())
           .then(json => {
-            movieItemsMap.value[pathParam] = json['results'];
+            movieItemsMap[pathParam] = json['results'];
+            firstMovie[pathParam] = json['results'][0];
           })
           .catch(err => console.error(err))
           .finally(() => {
@@ -52,6 +72,7 @@ export default {
 
     return {
       movieItemsMap,
+      firstMovie,
       loading,
     };
   },

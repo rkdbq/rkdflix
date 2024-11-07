@@ -10,12 +10,7 @@
   </div>
 
   <div v-if="viewOption === 'grid'">
-    <MovieGrid :movie-items="movieItems"/>
-    <div class="pagination">
-      <button @click="prevPage" :disabled="currentPage === 1">Previous</button>
-      <span>Page {{ currentPage }}</span>
-      <button @click="nextPage" :disabled="currentPage === 10">Next</button>
-    </div>
+    <MovieTableView :current-page="currentPage" :movie-items="movieItems" :next-page="nextPage" :prev-page="prevPage"/>
   </div>
 
   <div v-if="viewOption === 'scroll'">
@@ -27,9 +22,9 @@
 
 <script>
 import {onBeforeUnmount, onMounted, ref} from 'vue';
-import MovieGrid from "@/components/movie/MovieGrid.vue";
 import Loading from "@/components/etc/Loading.vue";
 import MovieScrollView from "@/components/movie/MovieScrollView.vue";
+import MovieTableView from "@/components/MovieTableView.vue";
 
 const url = 'https://api.themoviedb.org/3/movie/popular?language=ko&page=';
 const options = {
@@ -42,7 +37,7 @@ const options = {
 
 export default {
   name: "PopularMovie",
-  components: {MovieScrollView, Loading, MovieGrid},
+  components: {MovieTableView, MovieScrollView, Loading},
   setup() {
     const movieItems = ref([]);
     const currentPage = ref(1);
@@ -139,11 +134,7 @@ export default {
   justify-content: flex-end;
   margin: 16px;
 }
-.pagination {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
+
 .pagination button {
   margin: 0 10px;
 }

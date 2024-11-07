@@ -12,7 +12,7 @@ export default {
   components: {MovieGrid},
   props: {
     goTop: {},
-    movieItems: {},
+    movieItems: [],
     showInfo: {
       type: Boolean,
       default: false,

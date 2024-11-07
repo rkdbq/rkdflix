@@ -1,8 +1,8 @@
 <template>
   <div>
-    <label for="id">{{ fieldName }}:</label>
-    <input type="text" id="id" v-model="inputFieldRef" />
-    <p style="color: red;">{{ validationMessageRef }}</p>
+    <label>{{ fieldName }}:</label>
+    <input :type="inputType" v-model="inputFieldRef" />
+    <p v-if="validationMessage" style="color: red;">{{ validationMessage }}</p>
   </div>
 </template>
 
@@ -14,21 +14,18 @@ export default {
   props: {
     fieldName: String, // 부모에서 전달된 value (v-model로 받은 값)
     inputField: String,
+    inputType: String,
     validationMessage: String,
-    validateFunction: Function,
   },
   setup(props, { emit }) {
-    const validationMessageRef = ref('');
-    const inputFieldRef = ref('');
+    const inputFieldRef = ref(props.inputField);
 
-    watch(inputFieldRef, (val) => {
-      validationMessageRef.value = props.validateFunction(val);
-      emit('onChanged', [inputFieldRef, validationMessageRef]);
+    watch(inputFieldRef, () => {
+      emit('onChanged', [inputFieldRef]);
     })
 
     return {
-      inputFieldRef,
-      validationMessageRef
+      inputFieldRef
     };
   },
 };

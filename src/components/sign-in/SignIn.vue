@@ -1,36 +1,41 @@
 <template>
   <div v-if="isLogin" class="sign-in-container">
     <UserInput :field-name="'아이디'"
-                 :input-field="userId"
-                 :validation-message="emailError"
-                 :validate-function="validateEmail"
-                 @on-changed="onIdChanged"
+               :input-field="userId"
+               :input-type="'text'"
+               @on-changed="onIdChanged"
+               :validation-message="emailError"
     />
-    <div>
-      <label for="pw">비밀번호:</label>
-      <input type="password" id="pw" v-model="userPw" />
-    </div>
+    <UserInput :field-name="'비밀번호'"
+               :input-field="userPw"
+               :input-type="'password'"
+               @on-changed="onPwChanged"
+    />
   </div>
 
   <div v-if="!isLogin" class="register-container">
-    <div>
-      <label for="id">아이디:</label>
-      <input type="text" id="id" v-model="userIdRegister" />
-      <p style="color: red;">{{ emailError }}</p>
-    </div>
-    <div>
-      <label for="pw">비밀번호:</label>
-      <input type="password" id="pw" v-model="userPwRegister" />
-    </div>
-    <div>
-      <label for="pw">비밀번호 확인:</label>
-      <input type="password" id="pw-confirm" v-model="userPwConfirmRegister" />
-      <p style="color: red;">{{ pwError }}</p>
-    </div>
-    <div>
-      <label for="pw">약관 동의: </label>
-      <input type="checkbox" id="condition-agreement" v-model="conditionAgreementRegister" />
-    </div>
+    <UserInput :field-name="'아이디'"
+               :input-field="userId"
+               :input-type="'text'"
+               :validation-message="emailError"
+               @on-changed="onIdChanged"
+    />
+    <UserInput :field-name="'비밀번호'"
+               :input-field="userPw"
+               :input-type="'password'"
+               @on-changed="onPwChanged"
+    />
+    <UserInput :field-name="'비밀번호 확인'"
+               :input-field="userPwConfirm"
+               :input-type="'password'"
+               @on-changed="onPwConfirmChanged"
+               :validation-message="pwError"
+    />
+    <UserInput :field-name="'약관 동의'"
+               :input-field="userConditionAgreement"
+               :input-type="'checkbox'"
+               @on-changed="onConditionAgreementChanged"
+    />
   </div>
 
   <div>
@@ -43,9 +48,9 @@
 </template>
 
 <script>
-import { ref, watch } from 'vue';
-import { useStore } from "vuex";
-import { useRouter } from "vue-router";
+import {ref} from 'vue';
+import {useStore} from "vuex";
+import {useRouter} from "vue-router";
 import UserInput from "@/components/sign-in/UserInput.vue";
 
 export default {
@@ -60,28 +65,12 @@ export default {
 
     const userId = ref('');
     const userPw = ref('');
+    const userPwConfirm = ref('');
 
-    const userIdRegister = ref('');
-    const userPwRegister = ref('');
-    const userPwConfirmRegister = ref('');
-    const conditionAgreementRegister = ref(false);
+    const userConditionAgreement = ref(false);
 
     const emailError = ref('');
     const pwError = ref('');
-
-    // Watchers
-    // watch(userId, (value) => {
-    //   checkEmail(value);
-    // });
-    watch(userIdRegister, (value) => {
-      checkEmail(value);
-    });
-    watch(userPwRegister, () => {
-      checkPassword();
-    });
-    watch(userPwConfirmRegister, () => {
-      checkPassword();
-    });
 
     const LogIn = () => {
       if(emailError.value) {
@@ -112,11 +101,8 @@ export default {
 
       userId.value = '';
       userPw.value = '';
-
-      userIdRegister.value = '';
-      userPwRegister.value = '';
-      userPwConfirmRegister.value = '';
-      conditionAgreementRegister.value = false;
+      userPwConfirm.value = '';
+      userConditionAgreement.value = false;
     };
 
     const Register = () => {
@@ -128,70 +114,75 @@ export default {
         alert(pwError.value);
         return;
       }
-      if (!userIdRegister.value) {
+      if (!userId.value) {
         alert('아이디를 입력해주세요.');
         return;
       }
-      if (!userPwRegister.value) {
+      if (!userPw.value) {
         alert('비밀번호를 입력해주세요.');
         return;
       }
-      if (!conditionAgreementRegister.value) {
+      if (!userConditionAgreement.value) {
         alert('약관에 동의해주세요.');
         return;
       }
 
       alert('회원가입 성공!');
       const user = {
-        'password': userPwRegister.value,
+        'password': userPw.value,
         'wishlist': {},
       }
-      localStorage.setItem(userIdRegister.value, JSON.stringify(user));
+      localStorage.setItem(userId.value, JSON.stringify(user));
       Toggle();
-    };
-
-    const checkEmail = (email) => {
-      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      emailError.value = email && !emailPattern.test(email) ? "유효한 이메일 형식이 아닙니다." : '';
-      console.log(emailError.value);
     };
 
     const validateEmail = (email) => {
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      emailError.value = email && !emailPattern.test(email) ? "유효한 이메일 형식이 아닙니다." : '';
-      return emailError.value;
+      const errorMessage = ref(email.value && !emailPattern.test(email.value) ? "유효한 이메일 형식이 아닙니다." : '');
+      return errorMessage.value;
     };
 
     const onIdChanged = (args) => {
-      const email = args[0].value;
-      const msg = args[1].value;
-      userId.value = email;
-      emailError.value = msg;
+      userId.value = args[0].value;
+      emailError.value = validateEmail(userId);
     }
 
-    const checkPassword = () => {
-      const pw = userPwRegister.value;
-      const pwConfirm = userPwConfirmRegister.value;
-      pwError.value = pw !== pwConfirm ? "비밀번호가 다릅니다." : '';
-    };
+    const validatePw = (pw, pwConfirm) => {
+      const errorMessage = ref(pw.value !== pwConfirm.value ? "비밀번호가 다릅니다." : '');
+      return errorMessage.value;
+    }
+
+    const onPwChanged = (args) => {
+      userPw.value = args[0].value;
+      pwError.value = validatePw(userPw, userPwConfirm);
+    }
+
+    const onPwConfirmChanged = (args) => {
+      userPwConfirm.value = args[0].value;
+      pwError.value = validatePw(userPw, userPwConfirm);
+    }
+
+    const onConditionAgreementChanged = (args) => {
+      userConditionAgreement.value = args[0].value;
+    }
 
     return {
       isLogin,
       buttonLabel,
       userId,
       userPw,
-      userIdRegister,
-      userPwRegister,
-      userPwConfirmRegister,
-      conditionAgreementRegister,
+      userPwConfirm,
+      userConditionAgreement,
       emailError,
       pwError,
-      LogIn,
       Toggle,
+      LogIn,
       Register,
-      checkEmail,
       validateEmail,
-      onIdChanged
+      onIdChanged,
+      onPwChanged,
+      onPwConfirmChanged,
+      onConditionAgreementChanged
     };
   },
 }
@@ -200,14 +191,5 @@ export default {
 <style scoped>
 div {
   margin-bottom: 10px;
-}
-
-label {
-  margin-right: 8px;
-}
-
-input {
-  padding: 5px;
-  font-size: 14px;
 }
 </style>

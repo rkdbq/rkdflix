@@ -140,6 +140,11 @@ export default {
         return;
       }
 
+      if (localStorage.getItem(userId.value)) {
+        alert('존재하는 아이디입니다.');
+        return;
+      }
+
       alert('회원가입 성공!');
       const user = {
         'password': userPw.value,

@@ -1,13 +1,14 @@
 <template>
-  <header>
-    <nav v-if="$route.path !== '/signin'">
+  <header v-if="!isSignInRoute">
+    <nav>
       <RouterLink class="nav-item" to="/">Home</RouterLink>
       <RouterLink class="nav-item" to="/popular">Popular</RouterLink>
       <RouterLink class="nav-item" to="/search">Search</RouterLink>
       <RouterLink class="nav-item" to="/wishlist">Wishlist</RouterLink>
     </nav>
-    <nav v-if="$route.path !== '/signin'">
-      <RouterLink class="nav-item" to="/signin">Log Out</RouterLink>
+    <nav class="nav-logout">
+      <p class="nav-item">{{userId}} 님</p>
+      <button class="nav-item" @click="LogOut">로그아웃</button>
     </nav>
   </header>
   <main>
@@ -15,12 +16,28 @@
   </main>
 </template>
 
-<script>
-export default {
-  name: 'App',
-  components: {
-  }
+<script setup>
+import { useStore } from "vuex";
+import { useRoute, useRouter } from 'vue-router';
+import {computed, onMounted} from 'vue';
+
+const route = useRoute();
+const router = useRouter();
+const isSignInRoute = computed(() => route.path === '/sign-in');
+
+const store = useStore();
+const userId = computed(() => store.state.user.userId);
+
+const LogOut = () => {
+  localStorage.removeItem('remember_me');
+  router.push('/sign-in');
 }
+
+onMounted(() => {
+  if(store.state.user.userId === null) {
+    router.push('/sign-in');
+  }
+})
 </script>
 
 <style>
@@ -39,9 +56,14 @@ header {
   padding: 10px;
 }
 nav {
+  display: flex;
   gap: 20px; /* 링크 간격 */
 }
+.nav-logout {
+  gap: 0;
+}
 .nav-item {
+  margin: 0;
   padding: 10px;
 }
 </style>

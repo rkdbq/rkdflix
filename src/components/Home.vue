@@ -1,5 +1,15 @@
+<template>
+  <MovieSliderView :list-name="'Now Playing'" :movie-items="movieItemsMap['now_playing']"/>
+  <MovieSliderView :list-name="'Top Rated'" :movie-items="movieItemsMap['top_rated']"/>
+  <MovieSliderView :list-name="'Upcoming'" :movie-items="movieItemsMap['upcoming']"/>
+
+  <Loading :isLoading="loading"/>
+</template>
+
 <script>
-import MovieList from "@/components/movie/MovieList.vue";
+import { ref, onMounted } from 'vue';
+import MovieSliderView from "@/components/movie/MovieSliderView.vue";
+import Loading from "@/components/etc/Loading.vue";
 
 const url = 'https://api.themoviedb.org/3/movie/';
 const options = {
@@ -12,35 +22,38 @@ const options = {
 
 export default {
   name: "HomePage",
-  components: {MovieList},
-  data() {
-    return {
-      movieItemsMap: {},
-    }
-  },
-  mounted() {
-    this.fetchMovies('now_playing');
-    this.fetchMovies('top_rated');
-    this.fetchMovies('upcoming');
-  },
-  methods: {
-    fetchMovies(pathParam) {
+  components: { MovieSliderView, Loading },
+  setup() {
+    const movieItemsMap = ref({});
+    const loading = ref(false);
+
+    const fetchMovies = (pathParam) => {
+      loading.value = true;
+
       const language = "ko";
       const page = 1;
 
       fetch(`${url}${pathParam}?language=${language}&page=${page}`, options)
           .then(res => res.json())
           .then(json => {
-            this.movieItemsMap[pathParam] = json['results'];
+            movieItemsMap.value[pathParam] = json['results'];
           })
-          .catch(err => console.error(err));
-    },
-  },
-}
-</script>
+          .catch(err => console.error(err))
+          .finally(() => {
+            loading.value = false;
+          });
+    };
 
-<template>
-  <MovieList :list-name="'Now Playing'" :movie-items="movieItemsMap['now_playing']"/>
-  <MovieList :list-name="'Top Rated'" :movie-items="movieItemsMap['top_rated']"/>
-  <MovieList :list-name="'Upcoming'" :movie-items="movieItemsMap['upcoming']"/>
-</template>
+    onMounted(() => {
+      fetchMovies('now_playing');
+      fetchMovies('top_rated');
+      fetchMovies('upcoming');
+    });
+
+    return {
+      movieItemsMap,
+      loading,
+    };
+  },
+};
+</script>

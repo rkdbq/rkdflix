@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>{{listName}}</h1>
+    <h1>{{ listName }}</h1>
     <div class="slider">
       <button @click="prevSlide" class="arrow left-arrow">❮</button>
       <div class="movie-grid" ref="slider">
@@ -12,45 +12,61 @@
             :posterPath="item['poster_path']"
             :overview="item['overview']"
             :voteAverage="item['vote_average']"
+            :show-info="true"
         />
       </div>
       <button @click="nextSlide" class="arrow right-arrow">❯</button>
     </div>
   </div>
 </template>
-<script>
-import MovieItem from "@/components/movie/MovieItem.vue"
 
-export default {
-  name: 'MovieList',
-  components: {MovieItem},
+<script>
+import { defineComponent, ref } from 'vue';
+import MovieItem from "@/components/movie/MovieItem.vue";
+
+export default defineComponent({
+  name: 'MovieSliderView',
+  components: { MovieItem },
   props: {
-    listName: String,
-    movieItems: Array,
-  },
-  mounted() {
-    console.log(this.movieItems);
-  },
-  methods: {
-    nextSlide() {
-      const slider = this.$refs.slider;
-      slider.scrollBy({
-        top: 0,
-        left: slider.clientWidth,
-        behavior: 'smooth'
-      });
+    listName: {
+      type: String,
+      required: true
     },
-    prevSlide() {
-      const slider = this.$refs.slider;
-      slider.scrollBy({
-        top: 0,
-        left: -slider.clientWidth,
-        behavior: 'smooth'
-      });
+    movieItems: {
+      type: Array,
+      required: true
     }
+  },
+  setup() {
+    const slider = ref(null);
+
+    // 공통된 scroll 기능을 하나의 함수로 추출
+    const scrollSlider = (direction) => {
+      if (slider.value) {
+        slider.value.scrollBy({
+          top: 0,
+          left: direction * slider.value.clientWidth,
+          behavior: 'smooth',
+        });
+      }
+    };
+
+    // 다음 슬라이드로 이동
+    const nextSlide = () => scrollSlider(1);
+
+    // 이전 슬라이드로 이동
+    const prevSlide = () => scrollSlider(-1);
+
+    return {
+      slider,
+      nextSlide,
+      prevSlide,
+    };
   }
-}
+
+});
 </script>
+
 <style scoped>
 .slider {
   display: flex;
@@ -69,7 +85,7 @@ export default {
 }
 
 .movie-grid::-webkit-scrollbar {
-  display: none; /* Chrome/Safari용 */
+  display: none;
 }
 
 .arrow {
@@ -97,5 +113,4 @@ export default {
 .right-arrow {
   right: 10px;
 }
-
 </style>

@@ -9,22 +9,32 @@
           :voteAverage="item['vote_average']"
           :overview="item['overview']"
           :title="item['title']"
-          :show-info="false"
+          :show-info="showInfo"
       />
     </div>
   </div>
 </template>
-<script>
-import MovieItem from "@/components/movie/MovieItem.vue"
 
-export default {
+<script>
+import { defineComponent } from 'vue';
+import MovieItem from "@/components/movie/MovieItem.vue";
+
+export default defineComponent({
   name: 'MovieGrid',
-  components: {MovieItem},
+  components: { MovieItem },
   props: {
-    movieItems: {}
-  }
-}
+    movieItems: {
+      type: Array,
+      required: true
+    },
+    showInfo: {
+      type: Boolean,
+      default: false,
+    }
+  },
+});
 </script>
+
 <style scoped>
 .movie-grid-container {
   display: flex;

@@ -24,7 +24,7 @@ export default {
   name: "HomePage",
   components: { MovieSliderView, Loading },
   setup() {
-    const movieItemsMap = ref(Map);
+    const movieItemsMap = ref({});
     const loading = ref(false);
 
     const fetchMovies = (pathParam) => {

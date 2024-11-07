@@ -19,7 +19,7 @@
 <script setup>
 import { useStore } from "vuex";
 import { useRoute, useRouter } from 'vue-router';
-import { computed } from 'vue';
+import {computed, onMounted} from 'vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -32,6 +32,12 @@ const LogOut = () => {
   localStorage.removeItem('remember_me');
   router.push('/sign-in');
 }
+
+onMounted(() => {
+  if(store.state.user.userId === null) {
+    router.push('/sign-in');
+  }
+})
 </script>
 
 <style>

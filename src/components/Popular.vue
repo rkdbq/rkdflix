@@ -24,7 +24,7 @@
 import {onBeforeUnmount, onMounted, ref} from 'vue';
 import Loading from "@/components/etc/Loading.vue";
 import MovieScrollView from "@/components/movie/MovieScrollView.vue";
-import MovieTableView from "@/components/MovieTableView.vue";
+import MovieTableView from "@/components/movie/MovieTableView.vue";
 
 const url = 'https://api.themoviedb.org/3/movie/popular?language=ko&page=';
 const options = {

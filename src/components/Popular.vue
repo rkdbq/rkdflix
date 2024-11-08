@@ -121,13 +121,14 @@ export default {
     const updateSliceSize = () => {
       const width = window.innerWidth;
       const height = window.innerHeight;
+      const gap = 16;
 
-      sliceSize.value = Math.floor(width / 205) * (Math.floor(height / 310) - 1);
+      sliceSize.value = Math.floor((width - 20 + gap) / (200 + gap)) * (Math.floor(height / 300) - 1);
       sliceSize.value = Math.max(1, sliceSize.value);
     };
 
     onMounted(() => {
-      fetchPopularMovies(currentPage.value);
+      setViewOption('grid');
       window.addEventListener('scroll', handleScroll);
 
       updateSliceSize();

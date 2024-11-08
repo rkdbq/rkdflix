@@ -1,17 +1,18 @@
 <template>
   <MovieGrid :movie-items="movieItems" :show-info="showInfo" />
   <div class="go-top-button">
-    <button @click="goTop">Top</button>
+    <RkdButton :on-click="goTop">Top</RkdButton>
   </div>
 </template>
 
 <script>
 import { defineComponent } from 'vue';
 import MovieGrid from "@/components/movie/MovieGrid.vue";
+import RkdButton from "@/components/etc/RkdButton.vue";
 
 export default defineComponent({
   name: 'MovieScrollView',
-  components: { MovieGrid },
+  components: {RkdButton, MovieGrid },
   props: {
     goTop: {
       type: Function,

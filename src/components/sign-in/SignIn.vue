@@ -10,7 +10,7 @@
                :input-type="'password'"
                @on-changed="onPwChanged"
     />
-    <UserInput :field-name="'자동 로그인'"
+    <UserInput :field-name="'로그인 정보 저장'"
                :input-field="rememberMe"
                :input-type="'checkbox'"
                @on-changed="onRememberMeChanged"
@@ -43,11 +43,11 @@
   </div>
 
   <div>
-    <button v-if="isLogin" @click="LogIn">로그인</button>
-    <button v-if="!isLogin" @click="Register">회원가입</button>
+    <RkdButton v-if="isLogin" :on-click="LogIn" :width-size="200">로그인</RkdButton>
+    <RkdButton v-if="!isLogin" :on-click="Register" :width-size="200">회원가입</RkdButton>
   </div>
   <div>
-    <button @click="Toggle">{{ buttonLabel[Number(!isLogin)] }}하기</button>
+    <RkdButton :on-click="Toggle" :width-size="200">{{ buttonLabel[Number(!isLogin)] }}하기</RkdButton>
   </div>
 </template>
 
@@ -56,10 +56,11 @@ import {onMounted, ref} from 'vue';
 import {useStore} from "vuex";
 import {useRouter} from "vue-router";
 import UserInput from "@/components/sign-in/UserInput.vue";
+import RkdButton from "@/components/etc/RkdButton.vue";
 
 export default {
   name: "SignIn",
-  components: {UserInput: UserInput},
+  components: {RkdButton, UserInput: UserInput},
   setup() {
     const store = useStore();
     const router = useRouter();

@@ -10,7 +10,7 @@
         :selected-option="selectedFilterOption[filterType]"
         @on-option-selected="selectOption"
     />
-    <button @click="resetFilters" class="reset-button">초기화</button>
+    <RkdButton :on-click="resetFilters">초기화</RkdButton>
 
     <MovieScrollView :go-top="goTop" :movie-items="movieItems"/>
 
@@ -23,6 +23,7 @@ import {onBeforeUnmount, onMounted, reactive, ref} from "vue";
 import Filter from "@/components/etc/Filter.vue";
 import Loading from "@/components/etc/Loading.vue";
 import MovieScrollView from "@/components/movie/MovieScrollView.vue";
+import RkdButton from "@/components/etc/RkdButton.vue";
 
 const url = 'https://api.themoviedb.org/3/discover/';
 const options = {
@@ -35,7 +36,7 @@ const options = {
 
 export default {
   name: "SearchMovie",
-  components: {MovieScrollView, Filter, Loading },
+  components: {RkdButton, MovieScrollView, Filter, Loading },
   setup() {
     const movieItems = ref([]);
     const currentPage = ref(1);

@@ -1,8 +1,6 @@
 <template>
   <div class="dropdown">
-    <button @click="toggleDropdown" class="dropdown-button">
-      {{ selectedOption }}
-    </button>
+    <RkdButton :on-click="toggleDropdown">{{selectedOption}}</RkdButton>
     <div v-if="isOpen" class="dropdown-menu">
       <button
           v-for="(option, index) in options"
@@ -18,9 +16,11 @@
 
 <script>
 import { defineComponent, ref } from 'vue';
+import RkdButton from "@/components/etc/RkdButton.vue";
 
 export default defineComponent({
   name: 'FilterDropdown',
+  components: {RkdButton},
   props: {
     filterType: {
       type: String,

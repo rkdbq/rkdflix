@@ -64,7 +64,7 @@ export default defineComponent({
 .list-enter-from,
 .list-leave-to {
   opacity: 0;
-  transform: translateX(30px);
+  transform: translateY(-25px);
 }
 
 /* 이동 애니메이션을 올바르게 계산할 수 있도록

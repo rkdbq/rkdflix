@@ -8,7 +8,7 @@
     </nav>
     <nav class="nav-logout">
       <p class="nav-item">{{userId}} 님</p>
-      <button class="nav-item" @click="LogOut">로그아웃</button>
+      <RkdButton :on-click="LogOut">로그아웃</RkdButton>
     </nav>
   </header>
   <main>
@@ -17,9 +17,10 @@
 </template>
 
 <script setup>
-import { useStore } from "vuex";
-import { useRoute, useRouter } from 'vue-router';
+import {useStore} from "vuex";
+import {useRoute, useRouter} from 'vue-router';
 import {computed, onMounted} from 'vue';
+import RkdButton from "@/components/etc/RkdButton.vue";
 
 const route = useRoute();
 const router = useRouter();

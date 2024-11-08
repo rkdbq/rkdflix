@@ -1,12 +1,8 @@
 <template>
   <h1>Popular</h1>
   <div class="select-view-container">
-    <button @click="setViewOption('scroll')" :disabled="viewOption === 'scroll'">
-      Scroll
-    </button>
-    <button @click="setViewOption('grid')" :disabled="viewOption === 'grid'">
-      Grid
-    </button>
+    <RkdButton :on-click="toggleViewOption" :disabled="viewOption === 'scroll'">Scroll</RkdButton>
+    <RkdButton :on-click="toggleViewOption" :disabled="viewOption === 'grid'">Grid</RkdButton>
   </div>
 
   <div v-if="viewOption === 'grid'">
@@ -25,6 +21,7 @@ import {computed, onBeforeUnmount, onMounted, ref} from 'vue';
 import Loading from "@/components/etc/Loading.vue";
 import MovieScrollView from "@/components/movie/MovieScrollView.vue";
 import MovieTableView from "@/components/movie/MovieTableView.vue";
+import RkdButton from "@/components/etc/RkdButton.vue";
 
 const url = 'https://api.themoviedb.org/3/movie/popular?language=ko&page=';
 const options = {
@@ -37,7 +34,7 @@ const options = {
 
 export default {
   name: "PopularMovie",
-  components: {MovieTableView, MovieScrollView, Loading},
+  components: {RkdButton, MovieTableView, MovieScrollView, Loading},
   setup() {
     const movieItems = ref([]);
     const currentPage = ref(1);
@@ -87,6 +84,15 @@ export default {
     const goTop = () => {
       window.scrollTo(0, 0);
     };
+
+    const toggleViewOption = () => {
+      if (viewOption.value === "scroll") {
+        setViewOption('grid');
+      }
+      else {
+        setViewOption('scroll');
+      }
+    }
 
     const setViewOption = (option) => {
       viewOption.value = option;
@@ -151,7 +157,7 @@ export default {
       nextPage,
       prevPage,
       goTop,
-      setViewOption,
+      toggleViewOption,
     };
   },
 };
@@ -164,7 +170,33 @@ export default {
   margin: 16px;
 }
 
-.pagination button {
-  margin: 0 10px;
+.select-view-container button {
+  width: 120px;
+  background-color: #f0f0f0;
+  border: 2px solid #ddd;
+  border-radius: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-left: 8px;
+}
+
+.select-view-container button.active {
+  background-color: #4a90e2; /* Active color */
+  border-color: #4a90e2;
+  color: white;
+}
+
+.select-view-container button:hover:not(.active) {
+  background-color: #e0e0e0; /* Hover color for inactive buttons */
+  border-color: #bbb;
+}
+
+.select-view-container button:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
 }
 </style>

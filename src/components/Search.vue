@@ -1,16 +1,19 @@
 <template>
   <div>
-    <h1>Search</h1>
-
-    <Filter
-        v-for="[filterType, options] in Object.entries(filters)"
-        :key="filterType"
-        :filter-type="filterType"
-        :options="options"
-        :selected-option="selectedFilterOption[filterType]"
-        @on-option-selected="selectOption"
-    />
-    <RkdButton :on-click="resetFilters">초기화</RkdButton>
+    <div class="search-container">
+      <h1 class="list-name">Search</h1>
+      <div class="filter-container">
+        <Filter
+            v-for="[filterType, options] in Object.entries(filters)"
+            :key="filterType"
+            :filter-type="filterType"
+            :options="options"
+            :selected-option="selectedFilterOption[filterType]"
+            @on-option-selected="selectOption"
+        />
+        <RkdButton :on-click="resetFilters">초기화</RkdButton>
+      </div>
+    </div>
 
     <MovieScrollView :go-top="goTop" :movie-items="movieItems"/>
 
@@ -190,8 +193,19 @@ export default {
 </script>
 
 <style scoped>
-.reset-button {
-  width: 100px;
+.search-container {
+  display: flex;
+  justify-content: space-between;
+}
+.list-name {
+  margin-left: 16px;
+  margin-bottom: 0;
+}
+.filter-container {
+  justify-content: flex-end;
+  margin: 16px;
+}
+.filter-container button {
   margin: 16px;
 }
 </style>

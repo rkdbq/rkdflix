@@ -1,19 +1,21 @@
 <template>
-  <header v-if="!isSignInRoute">
-    <nav>
-      <RouterLink class="nav-item" to="/">Home</RouterLink>
-      <RouterLink class="nav-item" to="/popular">Popular</RouterLink>
-      <RouterLink class="nav-item" to="/search">Search</RouterLink>
-      <RouterLink class="nav-item" to="/wishlist">Wishlist</RouterLink>
-    </nav>
-    <nav class="nav-logout">
-      <p class="nav-item">{{userId}} 님</p>
-      <RkdButton :on-click="LogOut">로그아웃</RkdButton>
-    </nav>
-  </header>
-  <main>
-    <RouterView />
-  </main>
+  <div class="app-container">
+    <header v-if="!isSignInRoute">
+      <nav>
+        <RouterLink class="nav-item" to="/">Home</RouterLink>
+        <RouterLink class="nav-item" to="/popular">Popular</RouterLink>
+        <RouterLink class="nav-item" to="/search">Search</RouterLink>
+        <RouterLink class="nav-item" to="/wishlist">Wishlist</RouterLink>
+      </nav>
+      <nav class="nav-logout">
+        <p class="nav-item">{{userId}} 님</p>
+        <RkdButton class="nav-item" :on-click="LogOut">로그아웃</RkdButton>
+      </nav>
+    </header>
+    <main>
+      <RouterView />
+    </main>
+  </div>
 </template>
 
 <script setup>
@@ -52,9 +54,20 @@ onMounted(() => {
 }
 
 header {
+  position: fixed;
+  top: 0;
+  left: 5px;
+  right: 5px;
+  width: 98%;
+  background-color: white;
   display: flex;
   justify-content: space-between;
-  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 헤더 그림자 추가 */
+  z-index: 10; /* 다른 요소 위로 표시 */
+}
+
+main {
+  margin-top: 70px; /* header 높이만큼 마진 추가 */
 }
 nav {
   display: flex;

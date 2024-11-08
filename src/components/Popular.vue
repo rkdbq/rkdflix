@@ -1,8 +1,11 @@
 <template>
-  <h1>Popular</h1>
-  <div class="select-view-container">
-    <RkdButton :on-click="toggleViewOption" :disabled="viewOption === 'scroll'">Scroll</RkdButton>
-    <RkdButton :on-click="toggleViewOption" :disabled="viewOption === 'grid'">Grid</RkdButton>
+
+  <div class="popular-container">
+    <h1 class="category">Popular</h1>
+    <div class="select-view-container">
+      <RkdButton :on-click="toggleViewOption" :disabled="viewOption === 'scroll'">Scroll</RkdButton>
+      <RkdButton :on-click="toggleViewOption" :disabled="viewOption === 'grid'">Grid</RkdButton>
+    </div>
   </div>
 
   <div v-if="viewOption === 'grid'">
@@ -167,39 +170,20 @@ export default {
 </script>
 
 <style scoped>
-.select-view-container {
+.popular-container {
   display: flex;
+  justify-content: space-between;
+}
+.select-view-container {
   justify-content: flex-end;
   margin: 16px;
 }
-
 .select-view-container button {
-  width: 120px;
-  background-color: #f0f0f0;
-  border: 2px solid #ddd;
-  border-radius: 20px;
-  padding: 10px 20px;
-  font-size: 16px;
-  font-weight: bold;
-  color: #666;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-left: 8px;
+  margin: 16px;
 }
 
-.select-view-container button.active {
-  background-color: #4a90e2; /* Active color */
-  border-color: #4a90e2;
-  color: white;
-}
-
-.select-view-container button:hover:not(.active) {
-  background-color: #e0e0e0; /* Hover color for inactive buttons */
-  border-color: #bbb;
-}
-
-.select-view-container button:disabled {
-  cursor: not-allowed;
-  opacity: 0.7;
+.category {
+  margin-left: 16px;
+  margin-bottom: 0;
 }
 </style>

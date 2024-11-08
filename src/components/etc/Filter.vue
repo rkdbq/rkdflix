@@ -60,8 +60,9 @@ export default defineComponent({
 .dropdown {
   position: relative;
   display: inline-block;
-  margin: 16px;
   z-index: 500;
+  margin-right: 8px;
+  margin-left: 8px;
 }
 
 .dropdown-menu {

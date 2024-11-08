@@ -78,6 +78,7 @@ export default defineComponent({
 .movie-grid {
   display: flex;
   overflow-x: auto; /* 수평 스크롤 가능 */
+  overflow-y: hidden;
   scroll-behavior: smooth; /* 스크롤 애니메이션 효과 */
   width: 100%;
   padding: 10px 0; /* 패딩 추가 */

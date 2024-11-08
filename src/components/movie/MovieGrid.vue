@@ -1,16 +1,18 @@
 <template>
   <div class="movie-grid-container">
     <div class="movie-grid">
-      <MovieItem
-          v-for="item in movieItems"
-          :key="item['id']"
-          :id="item['id']"
-          :posterPath="item['poster_path']"
-          :voteAverage="item['vote_average']"
-          :overview="item['overview']"
-          :title="item['title']"
-          :show-info="showInfo"
-      />
+      <TransitionGroup name="list">
+        <MovieItem
+            v-for="item in movieItems"
+            :key="item['id']"
+            :id="item['id']"
+            :posterPath="item['poster_path']"
+            :voteAverage="item['vote_average']"
+            :overview="item['overview']"
+            :title="item['title']"
+            :show-info="showInfo"
+        />
+      </TransitionGroup>
     </div>
   </div>
 </template>
@@ -51,5 +53,23 @@ export default defineComponent({
 
 .pagination button {
   margin: 0 10px;
+}
+
+.list-move, /* 움직이는 엘리먼트에 트랜지션 적용 */
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease;
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+/* 이동 애니메이션을 올바르게 계산할 수 있도록
+   레이아웃 흐름에서 나머지 항목을 꺼내기. */
+.list-leave-active {
+  position: absolute;
 }
 </style>

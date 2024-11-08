@@ -59,6 +59,8 @@ export default defineComponent({
   color: white;
   text-align: left;
   margin: 16px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
 }
 .title {
   margin: 16px;

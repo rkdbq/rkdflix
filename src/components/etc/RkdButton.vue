@@ -34,7 +34,7 @@ nav {
 button {
   background-color: #f0f0f0;
   border: 2px solid #ddd;
-  border-radius: 20px;
+  border-radius: 16px;
   padding: 8px 16px;
   font-size: 14px;
   font-weight: bold;

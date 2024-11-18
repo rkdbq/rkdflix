@@ -106,7 +106,7 @@ export default {
       }
 
       alert('로그인 성공!');
-      store.commit('setUser', { userId: userId.value, password: user['password'], wishlist: user['wishlist'] });
+      store.commit('setUser', { userId: userId.value, password: user['password'], wishlist: user['wishlist'], search: user['search'] });
       router.push('/');
     };
 
@@ -150,6 +150,12 @@ export default {
       const user = {
         'password': userPw.value,
         'wishlist': {},
+        'search': {
+          'genre': "장르",
+          'vote avg': "별점",
+          'sort by': "기준",
+          'order by': "순서"
+        },
       }
       localStorage.setItem(userId.value, JSON.stringify(user));
       Toggle();

@@ -1,7 +1,6 @@
 <template>
   <div>
-    <label>{{ fieldName }}:</label>
-    <input :type="inputType" v-model="inputFieldRef" />
+    <input :type="inputType" :placeholder="placeholder" v-model="inputFieldRef" />
     <p v-if="validationMessage" style="color: red;">{{ validationMessage }}</p>
   </div>
 </template>
@@ -12,7 +11,7 @@ import { ref, watch } from 'vue';
 export default {
   name: 'UserInput',
   props: {
-    fieldName: String,
+    placeholder: String,
     inputField: String,
     inputType: String,
     validationMessage: String,

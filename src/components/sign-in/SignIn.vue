@@ -1,55 +1,74 @@
 <template>
-  <div v-if="isLogin" class="sign-in-container">
-    <UserInput :field-name="'아이디'"
-               :input-field="userId"
-               :input-type="'text'"
-               @on-changed="onIdChanged"
-    />
-    <UserInput :field-name="'비밀번호'"
-               :input-field="userPw"
-               :input-type="'password'"
-               @on-changed="onPwChanged"
-    />
-    <UserInput :field-name="'로그인 정보 저장'"
-               :input-field="rememberMe"
-               :input-type="'checkbox'"
-               @on-changed="onRememberMeChanged"
-    />
-  </div>
+  <div class="login-container">
+    <div v-if="isLogin" class="login-box">
+      <h1>Sign In</h1>
+      <UserInput
+          :placeholder="'아이디'"
+          :input-field="userId"
+          :input-type="'text'"
+          @on-changed="onIdChanged"
+      />
+      <UserInput
+          :placeholder="'비밀번호'"
+          :input-field="userPw"
+          :input-type="'password'"
+          @on-changed="onPwChanged"
+      />
+      <div class="checkbox-container">
+        <UserInput
+            :placeholder="'로그인 정보 저장'"
+            :input-field="rememberMe"
+            :input-type="'checkbox'"
+            @on-changed="onRememberMeChanged"
+        />
+        <label for="rememberMe">로그인 정보 저장</label>
+      </div>
+    </div>
 
-  <div v-if="!isLogin" class="register-container">
-    <UserInput :field-name="'아이디'"
-               :input-field="userId"
-               :input-type="'text'"
-               @on-changed="onIdChanged"
-               :validation-message="emailError"
-    />
-    <UserInput :field-name="'비밀번호'"
-               :input-field="userPw"
-               :input-type="'password'"
-               @on-changed="onPwChanged"
-    />
-    <UserInput :field-name="'비밀번호 확인'"
-               :input-field="userPwConfirm"
-               :input-type="'password'"
-               @on-changed="onPwConfirmChanged"
-               :validation-message="pwError"
-    />
-    <UserInput :field-name="'약관 동의'"
-               :input-field="userConditionAgreement"
-               :input-type="'checkbox'"
-               @on-changed="onConditionAgreementChanged"
-    />
-  </div>
+    <div v-if="!isLogin" class="register-box">
+      <h1>Sign Up</h1>
+      <UserInput
+          :placeholder="'아이디'"
+          :input-field="userId"
+          :input-type="'text'"
+          @on-changed="onIdChanged"
+          :validation-message="emailError"
+      />
+      <UserInput
+          :placeholder="'비밀번호'"
+          :input-field="userPw"
+          :input-type="'password'"
+          @on-changed="onPwChanged"
+      />
+      <UserInput
+          :placeholder="'비밀번호 확인'"
+          :input-field="userPwConfirm"
+          :input-type="'password'"
+          @on-changed="onPwConfirmChanged"
+          :validation-message="pwError"
+      />
+      <div class="checkbox-container">
+        <UserInput
+            :placeholder="'약관 동의'"
+            :input-field="userConditionAgreement"
+            :input-type="'checkbox'"
+            @on-changed="onConditionAgreementChanged"
+        />
+        <label for="userConditionAgreement">약관 동의</label>
+      </div>
+    </div>
 
-  <div>
-    <RkdButton v-if="isLogin" :on-click="LogIn" :width-size="200">로그인</RkdButton>
-    <RkdButton v-if="!isLogin" :on-click="Register" :width-size="200">회원가입</RkdButton>
-  </div>
-  <div>
-    <RkdButton :on-click="Toggle" :width-size="200">{{ buttonLabel[Number(!isLogin)] }}하기</RkdButton>
+    <div class="action-buttons">
+      <RkdButton v-if="isLogin" :on-click="LogIn" :width-size="200">로그인</RkdButton>
+      <RkdButton v-if="!isLogin" :on-click="Register" :width-size="200">회원가입</RkdButton>
+    </div>
+
+    <div class="toggle-button">
+      <RkdButton :on-click="Toggle" :width-size="200">{{ buttonLabel[Number(!isLogin)] }}하기</RkdButton>
+    </div>
   </div>
 </template>
+
 
 <script>
 import {onMounted, ref} from 'vue';
@@ -229,7 +248,91 @@ export default {
 </script>
 
 <style scoped>
-div {
-  margin-bottom: 10px;
+/* 넷플릭스 스타일 CSS */
+.login-container {
+  background-color: #141414;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-family: Arial, sans-serif;
 }
+
+h1 {
+  color: white;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.login-box,
+.register-box {
+  background-color: #333333;
+  border-radius: 8px;
+  padding: 30px 20px;
+  width: 320px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+input[type="text"],
+input[type="password"],
+input[type="checkbox"] {
+  width: 100%;
+  padding: 10px;
+  background-color: #444;
+  border: 1px solid #555;
+  border-radius: 4px;
+  color: white;
+  margin-top: 10px;
+}
+
+input[type="text"]::placeholder,
+input[type="password"]::placeholder {
+  color: #8c8c8c;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.checkbox-container label {
+  margin-left: 10px;
+  font-size: 14px;
+  color: #8c8c8c;
+}
+
+button {
+  width: 100%;
+  display: flex;
+  background-color: #e50914;
+}
+
+button:hover {
+  background-color: #f6121d;
+}
+
+.toggle-button {
+  margin-top: 10px;
+}
+
+.toggle-button button {
+  background-color: transparent;
+  color: white;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.toggle-button button:hover {
+  transform: scale(1.0);
+  color: #f6121d;
+  border: none;
+}
+.toggle-button button:focus {
+  box-shadow: none;
+}
+
 </style>

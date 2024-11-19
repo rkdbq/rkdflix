@@ -1,22 +1,25 @@
 <template>
   <div class="app-container">
-    <header v-if="!isSignInRoute">
-      <nav>
+    <header v-if="!isSignInRoute" class="header-container">
+      <nav class="nav-main">
         <RouterLink class="nav-item nav-route" to="/">Home</RouterLink>
         <RouterLink class="nav-item nav-route" to="/popular">Popular</RouterLink>
         <RouterLink class="nav-item nav-route" to="/search">Search</RouterLink>
         <RouterLink class="nav-item nav-route" to="/wishlist">Wishlist</RouterLink>
       </nav>
-      <nav class="nav-logout">
-        <p class="nav-item">{{userId}} 님</p>
-        <RkdButton class="nav-item" :on-click="LogOut">로그아웃</RkdButton>
+      <nav class="nav-user">
+        <p class="user-info">{{ userId }} 님</p>
+        <div class="logout-button">
+          <RkdButton class="logout-button" :on-click="LogOut">로그아웃</RkdButton>
+        </div>
       </nav>
     </header>
-    <main>
+    <main class="main-content">
       <RouterView />
     </main>
   </div>
 </template>
+
 
 <script setup>
 import {useStore} from "vuex";
@@ -44,65 +47,65 @@ onMounted(() => {
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 20px;
+/* 넷플릭스 스타일 CSS */
+.app-container {
+  font-family: Arial, sans-serif;
+  background-color: #141414;
+  color: white;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-header {
-  position: fixed;
-  top: 0;
-  left: 5px;
-  right: 5px;
-  width: 98%;
-  background-color: rgba(255, 255, 255, 0.90);
+.header-container {
   display: flex;
   justify-content: space-between;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 헤더 그림자 추가 */
-  z-index: 1000; /* 다른 요소 위로 표시 */
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
+  align-items: center;
+  padding: 20px;
+  background-color: #141414;
+  border-bottom: 1px solid #333;
 }
 
-main {
-  margin-top: 70px; /* header 높이만큼 마진 추가 */
-}
-nav {
+.nav-main,
+.nav-user {
   display: flex;
-  gap: 20px; /* 링크 간격 */
-}
-.nav-logout {
-  gap: 0;
-}
-.nav-item {
-  position: relative;
-  padding: 10px;
-  margin: 0 8px;
-}
-.nav-route {
-  position: relative;
-  padding: 10px;
-  color: #333;
-  font-weight: bold;
-  text-decoration: none;
-  margin: 0 8px;
-}
-.nav-route::after {
-  content: '';
-  position: absolute;
-  bottom: -2px; /* 텍스트와 선 사이의 거리 */
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: linear-gradient(to right, #000000, #ca2222);
-  transition: width 0.3s ease;
+  align-items: center;
+  gap: 20px;
 }
 
-.nav-route:hover::after {
-  width: 100%; /* hover 시 전체 너비로 확장 */
+.nav-item {
+  color: #e5e5e5;
+  text-decoration: none;
+  font-size: 16px;
+  transition: color 0.3s ease;
 }
+
+.nav-item:hover {
+  color: #f6121d;
+}
+
+.nav-route {
+  padding: 10px 0;
+}
+
+.user-info {
+  font-size: 14px;
+  color: #aaa;
+}
+
+.logout-button button {
+  padding: 8px 16px;
+  background-color: #e50914;
+}
+
+.logout-button button:hover {
+  background-color: #f6121d;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 20px;
+  background-color: #141414;
+}
+
 </style>

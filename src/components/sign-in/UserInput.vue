@@ -32,15 +32,23 @@ export default {
 
 <style scoped>
 div {
-  margin-bottom: 10px;
-}
-
-label {
-  margin-right: 8px;
+  display: flex;
+  flex-direction: column;
 }
 
 input {
-  padding: 5px;
+  height: 30px;
+  padding: 5px 10px;
   font-size: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.3); /* 연한 흰색 테두리 */
+  border-radius: 4px;
+  vertical-align: center;
+  background-color: #333;
+  color: #fff;
 }
+
+input::placeholder {
+  color: #8c8c8c;
+}
+
 </style>

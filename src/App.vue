@@ -48,9 +48,12 @@ onMounted(() => {
 
 <style>
 /* 넷플릭스 스타일 CSS */
+body {
+  margin: 0;
+  background-color: #141414;
+}
 .app-container {
   font-family: Arial, sans-serif;
-  background-color: #141414;
   color: white;
   min-height: 100vh;
   display: flex;
@@ -104,8 +107,6 @@ onMounted(() => {
 
 .main-content {
   flex-grow: 1;
-  padding: 20px;
-  background-color: #141414;
 }
 
 </style>

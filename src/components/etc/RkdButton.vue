@@ -20,6 +20,7 @@ export default {
 </script>
 <style scoped>
 button {
+  justify-content: center;
   background-color: rgba(0, 0, 0, 0.7); /* 반투명 검은색 */
   color: white; /* 텍스트 색상 */
   border: 1px solid rgba(255, 255, 255, 0.3); /* 연한 흰색 테두리 */

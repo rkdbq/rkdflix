@@ -1,6 +1,10 @@
 <template>
-  <div>
-    <h1>Wishlist</h1>
+  <div class = "wishlist-container">
+    <div class="wishlist-view">
+      <div class="list-name">
+        <h1>Wishlist</h1>
+      </div>
+    </div>
 
     <MovieScrollView :go-top="goTop" :movie-items="wishlist" :show-info="false"/>
   </div>
@@ -26,3 +30,16 @@ export default {
   },
 };
 </script>
+<style scoped>
+.wishlist-container {
+  margin: 16px;
+}
+.wishlist-view {
+  display: flex;
+  justify-content: space-between;
+}
+.list-name {
+  margin-left: 16px;
+  margin-bottom: 16px;
+}
+</style>

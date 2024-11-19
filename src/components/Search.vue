@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="search-container">
+  <div class="search-container">
+    <div class="search-view">
       <h1 class="list-name">Search</h1>
       <div class="filter-container">
         <Filter
@@ -198,6 +198,9 @@ export default {
 
 <style scoped>
 .search-container {
+  margin: 16px;
+}
+.search-view {
   display: flex;
   justify-content: space-between;
 }

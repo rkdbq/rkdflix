@@ -1,22 +1,23 @@
 <template>
-
   <div class="popular-container">
-    <h1 class="category">Popular</h1>
-    <div class="select-view-container">
-      <RkdButton :on-click="toggleViewOption" :disabled="viewOption === 'scroll'">Scroll</RkdButton>
-      <RkdButton :on-click="toggleViewOption" :disabled="viewOption === 'grid'">Grid</RkdButton>
+    <div class="popular-view">
+      <h1 class="category">Popular</h1>
+      <div class="select-view-container">
+        <RkdButton :on-click="toggleViewOption" :disabled="viewOption === 'scroll'">Scroll</RkdButton>
+        <RkdButton :on-click="toggleViewOption" :disabled="viewOption === 'grid'">Grid</RkdButton>
+      </div>
     </div>
-  </div>
 
-  <div v-if="viewOption === 'grid'">
-    <MovieTableView :table-page="tablePage" :index-from="indexFrom" :index-to="indexTo" :movie-items="movieItems" :next-page="nextPage" :prev-page="prevPage"/>
-  </div>
+    <div v-if="viewOption === 'grid'">
+      <MovieTableView :table-page="tablePage" :index-from="indexFrom" :index-to="indexTo" :movie-items="movieItems" :next-page="nextPage" :prev-page="prevPage"/>
+    </div>
 
-  <div v-if="viewOption === 'scroll'">
-    <MovieScrollView :go-top="goTop" :movie-items="movieItems"/>
-  </div>
+    <div v-if="viewOption === 'scroll'">
+      <MovieScrollView :go-top="goTop" :movie-items="movieItems"/>
+    </div>
 
-  <Loading :isLoading="loading"/>
+    <Loading :isLoading="loading"/>
+  </div>
 </template>
 
 <script>
@@ -171,12 +172,15 @@ export default {
 
 <style scoped>
 .popular-container {
+  margin: 16px;
+}
+.popular-view {
   display: flex;
   justify-content: space-between;
 }
 .select-view-container {
   justify-content: flex-end;
-  margin: 16px;
+  margin-top: 16px;
 }
 .select-view-container button {
   margin: 16px;

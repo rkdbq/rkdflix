@@ -1,16 +1,18 @@
 <template>
-  <MovieBanner
-      :id="firstMovie['now_playing']['id']"
-      :title="firstMovie['now_playing']['title']"
-      :backdrop-path="firstMovie['now_playing']['backdrop_path']"
-      :overview="firstMovie['now_playing']['overview']"
-  />
+  <div class="home-container">
+    <MovieBanner
+        :id="firstMovie['now_playing']['id']"
+        :title="firstMovie['now_playing']['title']"
+        :backdrop-path="firstMovie['now_playing']['backdrop_path']"
+        :overview="firstMovie['now_playing']['overview']"
+    />
 
-  <MovieSliderView :list-name="'Now Playing'" :movie-items="movieItemsMap['now_playing']"/>
-  <MovieSliderView :list-name="'Top Rated'" :movie-items="movieItemsMap['top_rated']"/>
-  <MovieSliderView :list-name="'Upcoming'" :movie-items="movieItemsMap['upcoming']"/>
+    <MovieSliderView :list-name="'Now Playing'" :movie-items="movieItemsMap['now_playing']"/>
+    <MovieSliderView :list-name="'Top Rated'" :movie-items="movieItemsMap['top_rated']"/>
+    <MovieSliderView :list-name="'Upcoming'" :movie-items="movieItemsMap['upcoming']"/>
 
-  <Loading :isLoading="loading"/>
+    <Loading :isLoading="loading"/>
+  </div>
 </template>
 
 <script>
@@ -78,3 +80,8 @@ export default {
   },
 };
 </script>
+<style scoped>
+.home-container {
+  margin: 16px;
+}
+</style>

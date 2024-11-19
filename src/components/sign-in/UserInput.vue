@@ -43,7 +43,7 @@ input {
   border: 1px solid rgba(255, 255, 255, 0.3); /* 연한 흰색 테두리 */
   border-radius: 4px;
   vertical-align: center;
-  background-color: #333;
+  background-color: rgba(51, 51, 51, 0.8);
   color: #fff;
 }
 

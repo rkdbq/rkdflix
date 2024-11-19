@@ -1,5 +1,6 @@
 <template>
   <div class="login-container">
+    <div class="background"></div>
     <div class="login-box">
       <div v-if="isLogin">
         <h1>Sign In</h1>
@@ -252,6 +253,7 @@ export default {
 <style scoped>
 /* 넷플릭스 스타일 CSS */
 .login-container {
+  position: relative;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -259,7 +261,23 @@ export default {
   justify-content: center;
   color: white;
   font-family: Arial, sans-serif;
-  background-color: #333333;
+  overflow: hidden;
+}
+
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background-image:
+      url("/src/assets/signin-background.png");
+  background-size: cover;
+  background-position: center;
+  transform-origin: center center;  /* 기울일 때 중심을 유지 */
+  transform: skew(-25deg, 5deg) scale(1.25);
+  filter: brightness(70%) blur(2px);
 }
 
 h1 {
@@ -269,7 +287,8 @@ h1 {
 }
 
 .login-box {
-  background-color: rgba(20, 20, 20, 0.95);
+  position: relative;
+  background-color: rgba(0, 0, 0, 0.8);
   border-radius: 8px;
   padding: 30px 20px;
   width: 320px;

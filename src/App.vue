@@ -2,10 +2,10 @@
   <div class="app-container">
     <header v-if="!isSignInRoute" class="header-container">
       <nav class="nav-main">
-        <RouterLink class="nav-item nav-route" to="/">Home</RouterLink>
-        <RouterLink class="nav-item nav-route" to="/popular">Popular</RouterLink>
-        <RouterLink class="nav-item nav-route" to="/search">Search</RouterLink>
-        <RouterLink class="nav-item nav-route" to="/wishlist">Wishlist</RouterLink>
+        <RouterLink class="nav-item nav-route" to="/"><FontAwesomeIcon :icon="faHouse" /> 홈</RouterLink>
+        <RouterLink class="nav-item nav-route" to="/popular"><FontAwesomeIcon :icon="faFire" /> 인기</RouterLink>
+        <RouterLink class="nav-item nav-route" to="/search"><FontAwesomeIcon :icon="faSearch" /> 검색</RouterLink>
+        <RouterLink class="nav-item nav-route" to="/wishlist"><FontAwesomeIcon :icon="faHeart" /> 위시리스트</RouterLink>
       </nav>
       <nav class="nav-user">
         <p class="user-info">{{ userId }} 님</p>
@@ -26,6 +26,8 @@ import {useStore} from "vuex";
 import {useRoute, useRouter} from 'vue-router';
 import {computed, onMounted} from 'vue';
 import RkdButton from "@/components/etc/RkdButton.vue";
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import {faFire, faHeart, faHouse, faSearch} from "@fortawesome/free-solid-svg-icons";
 
 const route = useRoute();
 const router = useRouter();

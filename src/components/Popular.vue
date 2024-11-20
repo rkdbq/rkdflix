@@ -3,8 +3,8 @@
     <div class="popular-view">
       <h1 class="category">Popular</h1>
       <div class="select-view-container">
-        <RkdButton :on-click="toggleViewOption" :disabled="viewOption === 'scroll'">Scroll</RkdButton>
-        <RkdButton :on-click="toggleViewOption" :disabled="viewOption === 'grid'">Grid</RkdButton>
+        <RkdButton :on-click="toggleViewOption" :disabled="viewOption === 'scroll'">스크롤</RkdButton>
+        <RkdButton :on-click="toggleViewOption" :disabled="viewOption === 'grid'">그리드</RkdButton>
       </div>
     </div>
 

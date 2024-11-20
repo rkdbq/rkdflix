@@ -2,7 +2,7 @@
   <MovieGrid :movie-items="slicedMovieItems" />
   <div class="pagination">
     <RkdButton :on-click="prevPage" :disabled="tablePage === 1">❮</RkdButton>
-    <span class="pagination-info">Page {{ tablePage }}</span>
+    <span class="pagination-info">페이지 {{ tablePage }}</span>
     <RkdButton :on-click="nextPage" :disabled="tablePage === 20">❯</RkdButton>
   </div>
 </template>

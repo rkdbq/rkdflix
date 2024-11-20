@@ -40,7 +40,7 @@ const options = {
 
 export default {
   name: "SearchMovie",
-  components: {RkdButton, MovieScrollView, Filter, Loading },
+  components: { RkdButton, MovieScrollView, Filter, Loading },
   setup() {
     const store = useStore();
 

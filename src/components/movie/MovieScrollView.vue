@@ -1,7 +1,7 @@
 <template>
   <MovieGrid :movie-items="movieItems" :show-info="showInfo" />
   <div class="go-top-button">
-    <RkdButton :on-click="goTop">Top</RkdButton>
+    <RkdButton :on-click="goTop"><FontAwesomeIcon :icon="faArrowUp()" /></RkdButton>
   </div>
 </template>
 
@@ -9,10 +9,17 @@
 import { defineComponent } from 'vue';
 import MovieGrid from "@/components/movie/MovieGrid.vue";
 import RkdButton from "@/components/etc/RkdButton.vue";
+import {faArrowUp} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
 export default defineComponent({
   name: 'MovieScrollView',
-  components: {RkdButton, MovieGrid },
+  methods: {
+    faArrowUp() {
+      return faArrowUp
+    }
+  },
+  components: {FontAwesomeIcon, RkdButton, MovieGrid },
   props: {
     goTop: {
       type: Function,

@@ -11,7 +11,7 @@
             :selected-option="selectedFilterOption[filterType]"
             @on-option-selected="selectOption"
         />
-        <RkdButton :on-click="resetFilters">초기화</RkdButton>
+        <RkdButton :on-click="resetFilters"><FontAwesomeIcon :icon="faRotateRight()" /></RkdButton>
       </div>
     </div>
 
@@ -28,6 +28,8 @@ import Loading from "@/components/etc/Loading.vue";
 import MovieScrollView from "@/components/movie/MovieScrollView.vue";
 import RkdButton from "@/components/etc/RkdButton.vue";
 import {useStore} from "vuex";
+import {faRotateRight} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
 const url = 'https://api.themoviedb.org/3/discover/';
 const options = {
@@ -40,7 +42,12 @@ const options = {
 
 export default {
   name: "SearchMovie",
-  components: { RkdButton, MovieScrollView, Filter, Loading },
+  methods: {
+    faRotateRight() {
+      return faRotateRight
+    }
+  },
+  components: {FontAwesomeIcon, RkdButton, MovieScrollView, Filter, Loading },
   setup() {
     const store = useStore();
 

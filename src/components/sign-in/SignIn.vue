@@ -2,20 +2,20 @@
   <div class="login-container">
     <div class="background"></div>
     <div class="login-box">
-      <transition name="slide-up">
+      <Transition name="slide-up" mode="out-in">
         <div class="input-box" v-if="isLogin">
           <h1>로그인</h1>
           <UserInput class="input-container"
-              :placeholder="'아이디'"
-              :input-field="userId"
-              :input-type="'text'"
-              @on-changed="onIdChanged"
+                     :placeholder="'아이디'"
+                     :input-field="userId"
+                     :input-type="'text'"
+                     @on-changed="onIdChanged"
           />
           <UserInput class="input-container"
-              :placeholder="'비밀번호'"
-              :input-field="userPw"
-              :input-type="'password'"
-              @on-changed="onPwChanged"
+                     :placeholder="'비밀번호'"
+                     :input-field="userPw"
+                     :input-type="'password'"
+                     @on-changed="onPwChanged"
           />
           <div class="input-container">
             <UserInput
@@ -30,24 +30,24 @@
         <div class="input-box" v-else>
           <h1>회원가입</h1>
           <UserInput class = "input-container"
-              :placeholder="'아이디'"
-              :input-field="userId"
-              :input-type="'text'"
-              @on-changed="onIdChanged"
-              :validation-message="emailError"
+                     :placeholder="'아이디'"
+                     :input-field="userId"
+                     :input-type="'text'"
+                     @on-changed="onIdChanged"
+                     :validation-message="emailError"
           />
           <UserInput class = "input-container"
-              :placeholder="'비밀번호'"
-              :input-field="userPw"
-              :input-type="'password'"
-              @on-changed="onPwChanged"
+                     :placeholder="'비밀번호'"
+                     :input-field="userPw"
+                     :input-type="'password'"
+                     @on-changed="onPwChanged"
           />
           <UserInput class = "input-container"
-              :placeholder="'비밀번호 확인'"
-              :input-field="userPwConfirm"
-              :input-type="'password'"
-              @on-changed="onPwConfirmChanged"
-              :validation-message="pwError"
+                     :placeholder="'비밀번호 확인'"
+                     :input-field="userPwConfirm"
+                     :input-type="'password'"
+                     @on-changed="onPwConfirmChanged"
+                     :validation-message="pwError"
           />
           <div class = "input-container">
             <UserInput
@@ -59,12 +59,7 @@
             <label for="userConditionAgreement">약관 동의</label>
           </div>
         </div>
-      </transition>
-
-      <transition name="resize">
-        <div v-if="isLogin" class="padding-login"></div>
-        <div v-else class="padding-signup"></div>
-      </transition>
+      </Transition>
 
       <div class="action-buttons">
         <RkdButton v-if="isLogin" :on-click="LogIn" :width-size="200">로그인</RkdButton>
@@ -76,9 +71,7 @@
       </div>
     </div>
   </div>
-
 </template>
-
 
 <script>
 import {onMounted, ref} from 'vue';
@@ -354,19 +347,7 @@ button:hover {
 }
 
 .input-box {
-  position: absolute;
-  left: 16px;
-  right: 16px;
-  top: 10px;
-  white-space: pre;
-  justify-content: center;
-}
-
-.padding-login {
-  height: 240px;
-}
-.padding-signup {
-  height: 300px;
+  position: relative;
 }
 
 .slide-up-enter-active,
@@ -382,14 +363,5 @@ button:hover {
 .slide-up-leave-to {
   opacity: 0;
   transform: translateY(-30px);
-}
-
-.resize-enter-active, .resize-leave-active {
-  transition: height 0.3s ease-out, padding 0.3s ease-out;
-}
-
-.resize-enter-from, .resize-leave-to {
-  height: 0;
-  padding: 0;
 }
 </style>

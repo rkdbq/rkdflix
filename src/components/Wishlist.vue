@@ -1,9 +1,8 @@
 <template>
   <div class = "wishlist-container">
     <div class="wishlist-view">
-      <div class="list-name">
-        <h1>Wishlist</h1>
-      </div>
+      <h1 class="list-name">Wishlist</h1>
+      <div class="margin-container"></div>
     </div>
 
     <MovieScrollView :go-top="goTop" :movie-items="wishlist" :show-info="false"/>
@@ -40,6 +39,10 @@ export default {
 }
 .list-name {
   margin-left: 16px;
-  margin-bottom: 16px;
+  margin-bottom: 32px;
+}
+.margin-container {
+  justify-content: flex-end;
+  margin: 16px;
 }
 </style>

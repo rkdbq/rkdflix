@@ -2,62 +2,69 @@
   <div class="login-container">
     <div class="background"></div>
     <div class="login-box">
-      <div v-if="isLogin">
-        <h1>로그인</h1>
-        <UserInput class="input-container"
-            :placeholder="'아이디'"
-            :input-field="userId"
-            :input-type="'text'"
-            @on-changed="onIdChanged"
-        />
-        <UserInput class="input-container"
-            :placeholder="'비밀번호'"
-            :input-field="userPw"
-            :input-type="'password'"
-            @on-changed="onPwChanged"
-        />
-        <div class="input-container">
-          <UserInput
-              :placeholder="'로그인 정보 저장'"
-              :input-field="rememberMe"
-              :input-type="'checkbox'"
-              @on-changed="onRememberMeChanged"
+      <transition name="slide-up">
+        <div class="input-box" v-if="isLogin">
+          <h1>로그인</h1>
+          <UserInput class="input-container"
+              :placeholder="'아이디'"
+              :input-field="userId"
+              :input-type="'text'"
+              @on-changed="onIdChanged"
           />
-          <label for="rememberMe">로그인 정보 저장</label>
-        </div>
-      </div>
-      <div v-if="!isLogin">
-        <h1>회원가입</h1>
-        <UserInput class = "input-container"
-            :placeholder="'아이디'"
-            :input-field="userId"
-            :input-type="'text'"
-            @on-changed="onIdChanged"
-            :validation-message="emailError"
-        />
-        <UserInput class = "input-container"
-            :placeholder="'비밀번호'"
-            :input-field="userPw"
-            :input-type="'password'"
-            @on-changed="onPwChanged"
-        />
-        <UserInput class = "input-container"
-            :placeholder="'비밀번호 확인'"
-            :input-field="userPwConfirm"
-            :input-type="'password'"
-            @on-changed="onPwConfirmChanged"
-            :validation-message="pwError"
-        />
-        <div class = "input-container">
-          <UserInput
-              :placeholder="'약관 동의'"
-              :input-field="userConditionAgreement"
-              :input-type="'checkbox'"
-              @on-changed="onConditionAgreementChanged"
+          <UserInput class="input-container"
+              :placeholder="'비밀번호'"
+              :input-field="userPw"
+              :input-type="'password'"
+              @on-changed="onPwChanged"
           />
-          <label for="userConditionAgreement">약관 동의</label>
+          <div class="input-container">
+            <UserInput
+                :placeholder="'로그인 정보 저장'"
+                :input-field="rememberMe"
+                :input-type="'checkbox'"
+                @on-changed="onRememberMeChanged"
+            />
+            <label for="rememberMe">로그인 정보 저장</label>
+          </div>
         </div>
-      </div>
+        <div class="input-box" v-else>
+          <h1>회원가입</h1>
+          <UserInput class = "input-container"
+              :placeholder="'아이디'"
+              :input-field="userId"
+              :input-type="'text'"
+              @on-changed="onIdChanged"
+              :validation-message="emailError"
+          />
+          <UserInput class = "input-container"
+              :placeholder="'비밀번호'"
+              :input-field="userPw"
+              :input-type="'password'"
+              @on-changed="onPwChanged"
+          />
+          <UserInput class = "input-container"
+              :placeholder="'비밀번호 확인'"
+              :input-field="userPwConfirm"
+              :input-type="'password'"
+              @on-changed="onPwConfirmChanged"
+              :validation-message="pwError"
+          />
+          <div class = "input-container">
+            <UserInput
+                :placeholder="'약관 동의'"
+                :input-field="userConditionAgreement"
+                :input-type="'checkbox'"
+                @on-changed="onConditionAgreementChanged"
+            />
+            <label for="userConditionAgreement">약관 동의</label>
+          </div>
+        </div>
+      </transition>
+
+      <transition name="resize">
+        <div v-if="isLogin" class="padding-login"></div>
+        <div v-else class="padding-signup"></div>
+      </transition>
 
       <div class="action-buttons">
         <RkdButton v-if="isLogin" :on-click="LogIn" :width-size="200">로그인</RkdButton>
@@ -346,4 +353,43 @@ button:hover {
   transform: none;
 }
 
+.input-box {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  top: 10px;
+  white-space: pre;
+  justify-content: center;
+}
+
+.padding-login {
+  height: 240px;
+}
+.padding-signup {
+  height: 300px;
+}
+
+.slide-up-enter-active,
+.slide-up-leave-active {
+  transition: all 0.25s ease-out;
+}
+
+.slide-up-enter-from {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.slide-up-leave-to {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+
+.resize-enter-active, .resize-leave-active {
+  transition: height 0.3s ease-out, padding 0.3s ease-out;
+}
+
+.resize-enter-from, .resize-leave-to {
+  height: 0;
+  padding: 0;
+}
 </style>

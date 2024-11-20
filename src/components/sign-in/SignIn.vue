@@ -105,9 +105,11 @@ export default {
     const LogIn = () => {
       if(emailError.value) {
         toast.error(emailError.value);
+        return;
       }
       if (!userId.value) {
         toast.error('아이디를 입력해주세요.');
+        return;
       }
       if (!userPw.value) {
         toast.error('비밀번호를 입력해주세요.');

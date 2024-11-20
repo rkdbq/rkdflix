@@ -22,7 +22,10 @@ export default {
     const wishlist = computed(() => Object.values(store.state.user.wishlist));
 
     const goTop = () => {
-      window.scrollTo(0, 0);
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
     };
 
     return { wishlist, goTop };

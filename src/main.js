@@ -2,6 +2,8 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import { createStore } from 'vuex';
+import ToastPlugin from 'vue-toast-notification';
+import 'vue-toast-notification/dist/theme-bootstrap.css';
 
 import Home from "@/components/Home.vue";
 import PopularMovie from "@/components/Popular.vue";
@@ -82,4 +84,4 @@ const store = createStore({
     },
 });
 
-createApp(App).use(router).use(store).mount('#app');
+createApp(App).use(router).use(store).use(ToastPlugin).mount('#app');

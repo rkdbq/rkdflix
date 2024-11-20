@@ -79,6 +79,7 @@ import {useStore} from "vuex";
 import {useRouter} from "vue-router";
 import UserInput from "@/components/sign-in/UserInput.vue";
 import RkdButton from "@/components/etc/RkdButton.vue";
+import {useToast} from "vue-toast-notification";
 
 export default {
   name: "SignIn",
@@ -86,6 +87,7 @@ export default {
   setup() {
     const store = useStore();
     const router = useRouter();
+    const toast = useToast();
 
     const isLogin = ref(true);
     const buttonLabel = ref(["회원가입", "로그인"]);
@@ -102,20 +104,20 @@ export default {
 
     const LogIn = () => {
       if(emailError.value) {
-        alert(emailError.value);
+        toast.error(emailError.value);
       }
       if (!userId.value) {
-        alert('아이디를 입력해주세요.');
+        toast.error('아이디를 입력해주세요.');
       }
       if (!userPw.value) {
-        alert('비밀번호를 입력해주세요.');
+        toast.error('비밀번호를 입력해주세요.');
         return;
       }
 
       const user = JSON.parse(localStorage.getItem(userId.value));
 
       if (!user || userPw.value !== user['password']) {
-        alert('비밀번호가 일치하지 않습니다.');
+        toast.error('비밀번호가 일치하지 않습니다.');
         return;
       }
 
@@ -127,7 +129,7 @@ export default {
         localStorage.setItem('remember_me', JSON.stringify(rememberUser));
       }
 
-      alert('로그인 성공!');
+      toast.success('로그인 성공!');
       store.commit('setUser', { userId: userId.value, password: user['password'], wishlist: user['wishlist'], search: user['search'] });
       router.push('/');
     };
@@ -143,32 +145,32 @@ export default {
 
     const Register = () => {
       if (emailError.value) {
-        alert(emailError.value);
+        toast.error(emailError.value);
         return;
       }
       if (pwError.value) {
-        alert(pwError.value);
+        toast.error(pwError.value);
         return;
       }
       if (!userId.value) {
-        alert('아이디를 입력해주세요.');
+        toast.error('아이디를 입력해주세요.');
         return;
       }
       if (!userPw.value) {
-        alert('비밀번호를 입력해주세요.');
+        toast.error('비밀번호를 입력해주세요.');
         return;
       }
       if (!userConditionAgreement.value) {
-        alert('약관에 동의해주세요.');
+        toast.error('약관에 동의해주세요.');
         return;
       }
 
       if (localStorage.getItem(userId.value)) {
-        alert('존재하는 아이디입니다.');
+        toast.error('존재하는 아이디입니다.');
         return;
       }
 
-      alert('회원가입 성공!');
+      toast.success('회원가입 성공!');
       const user = {
         'password': userPw.value,
         'wishlist': {},

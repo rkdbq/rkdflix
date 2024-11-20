@@ -3,7 +3,7 @@
     <div class="background"></div>
     <div class="login-box">
       <div v-if="isLogin">
-        <h1>Sign In</h1>
+        <h1>로그인</h1>
         <UserInput class="input-container"
             :placeholder="'아이디'"
             :input-field="userId"
@@ -27,7 +27,7 @@
         </div>
       </div>
       <div v-if="!isLogin">
-        <h1>Sign Up</h1>
+        <h1>회원가입</h1>
         <UserInput class = "input-container"
             :placeholder="'아이디'"
             :input-field="userId"

@@ -2,14 +2,14 @@
   <div class="dropdown">
     <RkdButton :on-click="toggleDropdown">{{selectedOption}}</RkdButton>
     <div v-if="isOpen" class="dropdown-menu">
-      <button
+      <RkdButton
           v-for="(option, index) in options"
           :key="index"
           @click="selectOption(option)"
           class="dropdown-button"
       >
         {{ option }}
-      </button>
+      </RkdButton>
     </div>
   </div>
 </template>
@@ -71,6 +71,6 @@ export default defineComponent({
 }
 
 .dropdown-button {
-  width: 100px;
+  width: 100%;
 }
 </style>

@@ -73,4 +73,16 @@ export default defineComponent({
 .dropdown-button {
   width: 100%;
 }
+
+@media (max-width: 768px) {
+  .dropdown {
+    margin-right: 2px;
+    margin-left: 2px;
+  }
+  .dropdown button {
+    margin: 0 2px;
+    font-size: 12px;
+    padding: 12px;
+  }
+}
 </style>

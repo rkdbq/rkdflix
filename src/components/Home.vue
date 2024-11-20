@@ -1,6 +1,6 @@
 <template>
   <div class="home-container">
-    <MovieBanner
+    <MovieBanner class="movie-banner"
         :id="firstMovie['now_playing']['id']"
         :title="firstMovie['now_playing']['title']"
         :backdrop-path="firstMovie['now_playing']['backdrop_path']"
@@ -83,5 +83,10 @@ export default {
 <style scoped>
 .home-container {
   margin: 16px;
+}
+@media (max-width: 768px) {
+  .movie-banner {
+    display: none;
+  }
 }
 </style>

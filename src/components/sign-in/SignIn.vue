@@ -87,7 +87,9 @@ export default {
   setup() {
     const store = useStore();
     const router = useRouter();
-    const toast = useToast();
+    const toast = useToast({
+      position: window.innerWidth > 768 ? "bottom-right" : "bottom",
+    });
 
     const isLogin = ref(true);
     const buttonLabel = ref(["회원가입", "로그인"]);
@@ -367,5 +369,12 @@ button:hover {
 .slide-up-leave-to {
   opacity: 0;
   transform: translateY(-30px);
+}
+
+@media (max-width: 768px) {
+  .background {
+    width: 200%;
+    scale: 1.25;
+  }
 }
 </style>

@@ -134,9 +134,14 @@ export default {
     const updateSliceSize = () => {
       const width = window.innerWidth;
       const height = window.innerHeight;
-      const gap = 16;
 
-      sliceSize.value = Math.floor((width - 20 + gap) / (200 + gap)) * (Math.floor(height / 300) - 1);
+      const scale = 0.8;
+      const posterWidth = width > 768 ? 200 : 200 * scale;
+      const posterHeight = width > 768 ? 300 : 300 * scale;
+      const padding = width > 768 ? 20: 2;
+      const gap =  width > 768 ? 16 : 2;
+
+      sliceSize.value = Math.floor((width - padding + gap) / (posterWidth + gap)) * (Math.floor(height / posterHeight) - 1);
       sliceSize.value = Math.max(1, sliceSize.value);
     };
 
@@ -189,5 +194,14 @@ export default {
 .category {
   margin-left: 16px;
   margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .category {
+    display: none; /* 모바일에서 텍스트 숨김 */
+  }
+  .popular-view {
+    justify-content: center;
+  }
 }
 </style>

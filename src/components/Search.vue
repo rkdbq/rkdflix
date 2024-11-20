@@ -221,5 +221,27 @@ export default {
 }
 .filter-container button {
   margin: 16px;
+  background-color: #e50914;
+}
+.filter-container button:hover {
+  background-color: #f6121d;
+}
+@media (max-width: 768px) {
+  .list-name {
+    display: none; /* 모바일에서 텍스트 숨김 */
+  }
+  .search-view {
+    justify-content: center;
+  }
+  .filter-container {
+    justify-content: center;
+    align-content: center;
+    display: flex;
+  }
+  .filter-container button {
+    margin: 0 2px;
+    font-size: 12px;
+    padding: 12px;
+  }
 }
 </style>

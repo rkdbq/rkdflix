@@ -127,6 +127,15 @@ img {
   font-weight: bold;
 }
 
+@media (max-width: 768px) {
+  .movie-item {
+    scale: 0.8;
+  }
+  .movie-item:hover {
+    scale: 0.85;
+  }
+}
+
 .v-enter-active,
 .v-leave-active {
   transition: opacity 0.25s ease;

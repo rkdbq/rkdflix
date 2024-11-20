@@ -2,10 +2,10 @@
   <div class="app-container">
     <header v-if="!isSignInRoute" class="header-container">
       <nav class="nav-main">
-        <RouterLink class="nav-item nav-route" to="/"><FontAwesomeIcon :icon="faHouse" /> 홈</RouterLink>
-        <RouterLink class="nav-item nav-route" to="/popular"><FontAwesomeIcon :icon="faFire" /> 인기</RouterLink>
-        <RouterLink class="nav-item nav-route" to="/search"><FontAwesomeIcon :icon="faSearch" /> 검색</RouterLink>
-        <RouterLink class="nav-item nav-route" to="/wishlist"><FontAwesomeIcon :icon="faHeart" /> 위시리스트</RouterLink>
+        <RouterLink class="nav-item nav-route" to="/"><FontAwesomeIcon :icon="faHouse" /> <span>홈</span></RouterLink>
+        <RouterLink class="nav-item nav-route" to="/popular"><FontAwesomeIcon :icon="faFire" /> <span>인기</span></RouterLink>
+        <RouterLink class="nav-item nav-route" to="/search"><FontAwesomeIcon :icon="faSearch" /> <span>검색</span></RouterLink>
+        <RouterLink class="nav-item nav-route" to="/wishlist"><FontAwesomeIcon :icon="faHeart" /> <span>위시리스트</span></RouterLink>
       </nav>
       <nav class="nav-user">
         <p class="user-info">{{ userId }} 님</p>
@@ -91,6 +91,16 @@ body {
 
 .nav-route {
   padding: 10px 0;
+}
+
+@media (max-width: 768px) {
+  .nav-item {
+    gap: 0; /* 아이콘 간격 제거 */
+  }
+
+  .nav-item span {
+    display: none; /* 모바일에서 텍스트 숨김 */
+  }
 }
 
 .user-info {

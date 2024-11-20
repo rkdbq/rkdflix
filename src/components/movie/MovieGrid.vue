@@ -72,4 +72,11 @@ export default defineComponent({
 .list-leave-active {
   position: absolute;
 }
+
+@media (max-width: 768px) {
+  .movie-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 2px;
+  }
+}
 </style>

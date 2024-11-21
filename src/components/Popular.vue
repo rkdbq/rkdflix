@@ -1,23 +1,23 @@
 <template>
-  <h1>Popular</h1>
-  <div class="select-view-container">
-    <button @click="setViewOption('scroll')" :disabled="viewOption === 'scroll'">
-      Scroll
-    </button>
-    <button @click="setViewOption('grid')" :disabled="viewOption === 'grid'">
-      Grid
-    </button>
-  </div>
+  <div class="popular-container">
+    <div class="popular-view">
+      <h1 class="category">Popular</h1>
+      <div class="select-view-container">
+        <RkdButton :on-click="toggleViewOption" :disabled="viewOption === 'scroll'">스크롤</RkdButton>
+        <RkdButton :on-click="toggleViewOption" :disabled="viewOption === 'grid'">그리드</RkdButton>
+      </div>
+    </div>
 
-  <div v-if="viewOption === 'grid'">
-    <MovieTableView :table-page="tablePage" :index-from="indexFrom" :index-to="indexTo" :movie-items="movieItems" :next-page="nextPage" :prev-page="prevPage"/>
-  </div>
+    <div v-if="viewOption === 'grid'">
+      <MovieTableView :table-page="tablePage" :index-from="indexFrom" :index-to="indexTo" :movie-items="movieItems" :next-page="nextPage" :prev-page="prevPage"/>
+    </div>
 
-  <div v-if="viewOption === 'scroll'">
-    <MovieScrollView :go-top="goTop" :movie-items="movieItems"/>
-  </div>
+    <div v-if="viewOption === 'scroll'">
+      <MovieScrollView :go-top="goTop" :movie-items="movieItems"/>
+    </div>
 
-  <Loading :isLoading="loading"/>
+    <Loading :isLoading="loading"/>
+  </div>
 </template>
 
 <script>
@@ -25,6 +25,7 @@ import {computed, onBeforeUnmount, onMounted, ref} from 'vue';
 import Loading from "@/components/etc/Loading.vue";
 import MovieScrollView from "@/components/movie/MovieScrollView.vue";
 import MovieTableView from "@/components/movie/MovieTableView.vue";
+import RkdButton from "@/components/etc/RkdButton.vue";
 
 const url = 'https://api.themoviedb.org/3/movie/popular?language=ko&page=';
 const options = {
@@ -37,7 +38,7 @@ const options = {
 
 export default {
   name: "PopularMovie",
-  components: {MovieTableView, MovieScrollView, Loading},
+  components: {RkdButton, MovieTableView, MovieScrollView, Loading},
   setup() {
     const movieItems = ref([]);
     const currentPage = ref(1);
@@ -85,8 +86,20 @@ export default {
     };
 
     const goTop = () => {
-      window.scrollTo(0, 0);
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
     };
+
+    const toggleViewOption = () => {
+      if (viewOption.value === "scroll") {
+        setViewOption('grid');
+      }
+      else {
+        setViewOption('scroll');
+      }
+    }
 
     const setViewOption = (option) => {
       viewOption.value = option;
@@ -122,12 +135,18 @@ export default {
       const width = window.innerWidth;
       const height = window.innerHeight;
 
-      sliceSize.value = Math.floor(width / 205) * (Math.floor(height / 310) - 1);
+      const scale = 0.8;
+      const posterWidth = width > 768 ? 200 : 200 * scale;
+      const posterHeight = width > 768 ? 300 : 300 * scale;
+      const padding = width > 768 ? 20: 2;
+      const gap =  width > 768 ? 16 : 2;
+
+      sliceSize.value = Math.floor((width - padding + gap) / (posterWidth + gap)) * (Math.floor(height / posterHeight) - 1);
       sliceSize.value = Math.max(1, sliceSize.value);
     };
 
     onMounted(() => {
-      fetchPopularMovies(currentPage.value);
+      setViewOption('grid');
       window.addEventListener('scroll', handleScroll);
 
       updateSliceSize();
@@ -150,20 +169,39 @@ export default {
       nextPage,
       prevPage,
       goTop,
-      setViewOption,
+      toggleViewOption,
     };
   },
 };
 </script>
 
 <style scoped>
-.select-view-container {
+.popular-container {
+  margin: 16px;
+}
+.popular-view {
   display: flex;
+  justify-content: space-between;
+}
+.select-view-container {
   justify-content: flex-end;
+  margin-top: 16px;
+}
+.select-view-container button {
   margin: 16px;
 }
 
-.pagination button {
-  margin: 0 10px;
+.category {
+  margin-left: 16px;
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .category {
+    display: none; /* 모바일에서 텍스트 숨김 */
+  }
+  .popular-view {
+    justify-content: center;
+  }
 }
 </style>

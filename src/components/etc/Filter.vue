@@ -1,26 +1,26 @@
 <template>
   <div class="dropdown">
-    <button @click="toggleDropdown" class="dropdown-button">
-      {{ selectedOption }}
-    </button>
+    <RkdButton :on-click="toggleDropdown">{{selectedOption}}</RkdButton>
     <div v-if="isOpen" class="dropdown-menu">
-      <button
+      <RkdButton
           v-for="(option, index) in options"
           :key="index"
           @click="selectOption(option)"
           class="dropdown-button"
       >
         {{ option }}
-      </button>
+      </RkdButton>
     </div>
   </div>
 </template>
 
 <script>
 import { defineComponent, ref } from 'vue';
+import RkdButton from "@/components/etc/RkdButton.vue";
 
 export default defineComponent({
   name: 'FilterDropdown',
+  components: {RkdButton},
   props: {
     filterType: {
       type: String,
@@ -60,8 +60,9 @@ export default defineComponent({
 .dropdown {
   position: relative;
   display: inline-block;
-  margin: 16px;
   z-index: 500;
+  margin-right: 8px;
+  margin-left: 8px;
 }
 
 .dropdown-menu {
@@ -70,6 +71,18 @@ export default defineComponent({
 }
 
 .dropdown-button {
-  width: 100px;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .dropdown {
+    margin-right: 2px;
+    margin-left: 2px;
+  }
+  .dropdown button {
+    margin: 0 2px;
+    font-size: 12px;
+    padding: 12px;
+  }
 }
 </style>

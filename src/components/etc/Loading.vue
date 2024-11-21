@@ -1,7 +1,9 @@
 <template>
-  <div v-if="isLoading" class="loading-overlay">
-    <div class="loading-spinner">Loading...</div>
-  </div>
+  <transition name="fade">
+    <div v-if="isLoading" class="loading-overlay">
+      <div class="loading-spinner">Loading...</div>
+    </div>
+  </transition>
 </template>
 
 <script>
@@ -34,5 +36,14 @@ export default {
 .loading-spinner {
   color: white;
   font-size: 24px;
+}
+
+/* 트랜지션 진입 및 퇴장 */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0;
 }
 </style>

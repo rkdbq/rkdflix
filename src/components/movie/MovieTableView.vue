@@ -1,19 +1,20 @@
 <template>
   <MovieGrid :movie-items="slicedMovieItems" />
   <div class="pagination">
-    <button @click="prevPage" :disabled="tablePage === 1">Previous</button>
-    <span>Page {{ tablePage }}</span>
-    <button @click="nextPage" :disabled="tablePage === 20">Next</button>
+    <RkdButton :on-click="prevPage" :disabled="tablePage === 1">❮</RkdButton>
+    <span class="pagination-info">페이지 {{ tablePage }}</span>
+    <RkdButton :on-click="nextPage" :disabled="tablePage === 20">❯</RkdButton>
   </div>
 </template>
 
 <script>
 import {computed, defineComponent } from 'vue';
 import MovieGrid from "@/components/movie/MovieGrid.vue";
+import RkdButton from "@/components/etc/RkdButton.vue";
 
 export default defineComponent({
   name: 'MovieTableView',
-  components: { MovieGrid },
+  components: {RkdButton, MovieGrid },
   props: {
     tablePage: {
       type: Number,
@@ -57,10 +58,14 @@ export default defineComponent({
 .pagination {
   display: flex;
   justify-content: center;
+  align-items: center;
+  gap: 15px;
   margin-top: 20px;
 }
 
-.pagination button {
-  margin: 0 10px;
+.pagination-info {
+  font-size: 16px;
+  font-weight: bold;
+  color: #555;
 }
 </style>

@@ -1,25 +1,33 @@
 <template>
-  <header v-if="!isSignInRoute">
-    <nav>
-      <RouterLink class="nav-item" to="/">Home</RouterLink>
-      <RouterLink class="nav-item" to="/popular">Popular</RouterLink>
-      <RouterLink class="nav-item" to="/search">Search</RouterLink>
-      <RouterLink class="nav-item" to="/wishlist">Wishlist</RouterLink>
-    </nav>
-    <nav class="nav-logout">
-      <p class="nav-item">{{userId}} 님</p>
-      <button class="nav-item" @click="LogOut">로그아웃</button>
-    </nav>
-  </header>
-  <main>
-    <RouterView />
-  </main>
+  <div class="app-container">
+    <header v-if="!isSignInRoute" class="header-container">
+      <nav class="nav-main">
+        <RouterLink class="nav-item nav-route" to="/"><FontAwesomeIcon :icon="faHouse" /> <span>홈</span></RouterLink>
+        <RouterLink class="nav-item nav-route" to="/popular"><FontAwesomeIcon :icon="faFire" /> <span>인기</span></RouterLink>
+        <RouterLink class="nav-item nav-route" to="/search"><FontAwesomeIcon :icon="faSearch" /> <span>검색</span></RouterLink>
+        <RouterLink class="nav-item nav-route" to="/wishlist"><FontAwesomeIcon :icon="faHeart" /> <span>위시리스트</span></RouterLink>
+      </nav>
+      <nav class="nav-user">
+        <p class="user-info">{{ userId }} 님</p>
+        <div class="logout-button">
+          <RkdButton class="logout-button" :on-click="LogOut">로그아웃</RkdButton>
+        </div>
+      </nav>
+    </header>
+    <main class="main-content">
+      <RouterView />
+    </main>
+  </div>
 </template>
 
+
 <script setup>
-import { useStore } from "vuex";
-import { useRoute, useRouter } from 'vue-router';
+import {useStore} from "vuex";
+import {useRoute, useRouter} from 'vue-router';
 import {computed, onMounted} from 'vue';
+import RkdButton from "@/components/etc/RkdButton.vue";
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import {faFire, faHeart, faHouse, faSearch} from "@fortawesome/free-solid-svg-icons";
 
 const route = useRoute();
 const router = useRouter();
@@ -41,29 +49,76 @@ onMounted(() => {
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 20px;
+/* 넷플릭스 스타일 CSS */
+body {
+  margin: 0;
+  background-color: #141414;
+}
+.app-container {
+  font-family: Arial, sans-serif;
+  color: white;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-header {
+.header-container {
   display: flex;
   justify-content: space-between;
-  padding: 10px;
+  align-items: center;
+  padding: 20px;
+  background-color: #141414;
+  border-bottom: 1px solid #333;
 }
-nav {
+
+.nav-main,
+.nav-user {
   display: flex;
-  gap: 20px; /* 링크 간격 */
+  align-items: center;
+  gap: 20px;
 }
-.nav-logout {
-  gap: 0;
-}
+
 .nav-item {
-  margin: 0;
-  padding: 10px;
+  color: #e5e5e5;
+  text-decoration: none;
+  font-size: 16px;
+  transition: color 0.3s ease;
 }
+
+.nav-item:hover {
+  color: #f6121d;
+}
+
+.nav-route {
+  padding: 10px 0;
+}
+
+@media (max-width: 768px) {
+  .nav-item {
+    gap: 0; /* 아이콘 간격 제거 */
+  }
+
+  .nav-item span {
+    display: none; /* 모바일에서 텍스트 숨김 */
+  }
+}
+
+.user-info {
+  font-size: 14px;
+  color: #aaa;
+}
+
+.logout-button button {
+  padding: 8px 16px;
+  background-color: #e50914;
+}
+
+.logout-button button:hover {
+  background-color: #f6121d;
+}
+
+.main-content {
+  flex-grow: 1;
+}
+
 </style>

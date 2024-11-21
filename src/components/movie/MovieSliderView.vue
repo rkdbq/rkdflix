@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h1>{{ listName }}</h1>
+  <div class="slider-container">
+    <h1 class="list-name">{{ listName }}</h1>
     <div class="slider">
       <button @click="prevSlide" class="arrow left-arrow">❮</button>
       <div class="movie-grid" ref="slider">
@@ -68,6 +68,11 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.list-name {
+  text-align: left;
+  margin-left: 8px;
+  margin-bottom: 0;
+}
 .slider {
   display: flex;
   align-items: center;
@@ -78,6 +83,7 @@ export default defineComponent({
 .movie-grid {
   display: flex;
   overflow-x: auto; /* 수평 스크롤 가능 */
+  overflow-y: hidden;
   scroll-behavior: smooth; /* 스크롤 애니메이션 효과 */
   width: 100%;
   padding: 10px 0; /* 패딩 추가 */

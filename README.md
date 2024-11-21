@@ -7,7 +7,6 @@ rkdflix는 영화 정보를 제공하고 사용자가 영화를 검색하고 위
 - Vue.js 3
 - Vue Router
 - Vuex
-- Axios
 - FontAwesome
 - TMDB API
 

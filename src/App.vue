@@ -2,6 +2,7 @@
   <div class="app-container">
     <header v-if="!isSignInRoute" class="header-container">
       <nav class="nav-main">
+        <RouterLink class="nav-item nav-route" to="/"><span><img class="logo" src="./assets/logo.png" alt="홈"/></span></RouterLink>
         <RouterLink class="nav-item nav-route" to="/"><FontAwesomeIcon :icon="faHouse" /> <span>홈</span></RouterLink>
         <RouterLink class="nav-item nav-route" to="/popular"><FontAwesomeIcon :icon="faFire" /> <span>인기</span></RouterLink>
         <RouterLink class="nav-item nav-route" to="/search"><FontAwesomeIcon :icon="faSearch" /> <span>검색</span></RouterLink>
@@ -87,6 +88,17 @@ body {
 
 .nav-item:hover {
   color: #f6121d;
+}
+
+.logo {
+  width: 20px;
+  height: 20px;
+  margin: 2px;
+  transition: scale 0.1s ease;
+}
+
+.logo:hover {
+  scale: 1.1;
 }
 
 .nav-route {

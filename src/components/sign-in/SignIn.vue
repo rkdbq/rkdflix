@@ -1,53 +1,75 @@
 <template>
-  <div v-if="isLogin" class="sign-in-container">
-    <UserInput :field-name="'아이디'"
-               :input-field="userId"
-               :input-type="'text'"
-               @on-changed="onIdChanged"
-    />
-    <UserInput :field-name="'비밀번호'"
-               :input-field="userPw"
-               :input-type="'password'"
-               @on-changed="onPwChanged"
-    />
-    <UserInput :field-name="'자동 로그인'"
-               :input-field="rememberMe"
-               :input-type="'checkbox'"
-               @on-changed="onRememberMeChanged"
-    />
-  </div>
+  <div class="login-container">
+    <div class="background"></div>
+    <div class="login-box">
+      <Transition name="slide-up" mode="out-in">
+        <div class="input-box" v-if="isLogin">
+          <h1>로그인</h1>
+          <UserInput class="input-container"
+                     :placeholder="'아이디'"
+                     :input-field="userId"
+                     :input-type="'text'"
+                     @on-changed="onIdChanged"
+          />
+          <UserInput class="input-container"
+                     :placeholder="'비밀번호'"
+                     :input-field="userPw"
+                     :input-type="'password'"
+                     @on-changed="onPwChanged"
+          />
+          <div class="input-container">
+            <UserInput
+                :placeholder="'로그인 정보 저장'"
+                :input-field="rememberMe"
+                :input-type="'checkbox'"
+                @on-changed="onRememberMeChanged"
+            />
+            <label for="rememberMe">로그인 정보 저장</label>
+          </div>
+        </div>
+        <div class="input-box" v-else>
+          <h1>회원가입</h1>
+          <UserInput class = "input-container"
+                     :placeholder="'아이디'"
+                     :input-field="userId"
+                     :input-type="'text'"
+                     @on-changed="onIdChanged"
+                     :validation-message="emailError"
+          />
+          <UserInput class = "input-container"
+                     :placeholder="'비밀번호'"
+                     :input-field="userPw"
+                     :input-type="'password'"
+                     @on-changed="onPwChanged"
+          />
+          <UserInput class = "input-container"
+                     :placeholder="'비밀번호 확인'"
+                     :input-field="userPwConfirm"
+                     :input-type="'password'"
+                     @on-changed="onPwConfirmChanged"
+                     :validation-message="pwError"
+          />
+          <div class = "input-container">
+            <UserInput
+                :placeholder="'약관 동의'"
+                :input-field="userConditionAgreement"
+                :input-type="'checkbox'"
+                @on-changed="onConditionAgreementChanged"
+            />
+            <label for="userConditionAgreement">약관 동의</label>
+          </div>
+        </div>
+      </Transition>
 
-  <div v-if="!isLogin" class="register-container">
-    <UserInput :field-name="'아이디'"
-               :input-field="userId"
-               :input-type="'text'"
-               @on-changed="onIdChanged"
-               :validation-message="emailError"
-    />
-    <UserInput :field-name="'비밀번호'"
-               :input-field="userPw"
-               :input-type="'password'"
-               @on-changed="onPwChanged"
-    />
-    <UserInput :field-name="'비밀번호 확인'"
-               :input-field="userPwConfirm"
-               :input-type="'password'"
-               @on-changed="onPwConfirmChanged"
-               :validation-message="pwError"
-    />
-    <UserInput :field-name="'약관 동의'"
-               :input-field="userConditionAgreement"
-               :input-type="'checkbox'"
-               @on-changed="onConditionAgreementChanged"
-    />
-  </div>
+      <div class="action-buttons">
+        <RkdButton v-if="isLogin" :on-click="LogIn" :width-size="200">로그인</RkdButton>
+        <RkdButton v-if="!isLogin" :on-click="Register" :width-size="200">회원가입</RkdButton>
+      </div>
 
-  <div>
-    <button v-if="isLogin" @click="LogIn">로그인</button>
-    <button v-if="!isLogin" @click="Register">회원가입</button>
-  </div>
-  <div>
-    <button @click="Toggle">{{ buttonLabel[Number(!isLogin)] }}하기</button>
+      <div class="toggle-button">
+        <RkdButton :on-click="Toggle" :width-size="200">{{ buttonLabel[Number(!isLogin)] }}하기</RkdButton>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -56,13 +78,18 @@ import {onMounted, ref} from 'vue';
 import {useStore} from "vuex";
 import {useRouter} from "vue-router";
 import UserInput from "@/components/sign-in/UserInput.vue";
+import RkdButton from "@/components/etc/RkdButton.vue";
+import {useToast} from "vue-toast-notification";
 
 export default {
   name: "SignIn",
-  components: {UserInput: UserInput},
+  components: {RkdButton, UserInput: UserInput},
   setup() {
     const store = useStore();
     const router = useRouter();
+    const toast = useToast({
+      position: window.innerWidth > 768 ? "bottom-right" : "bottom",
+    });
 
     const isLogin = ref(true);
     const buttonLabel = ref(["회원가입", "로그인"]);
@@ -79,20 +106,22 @@ export default {
 
     const LogIn = () => {
       if(emailError.value) {
-        alert(emailError.value);
+        toast.error(emailError.value);
+        return;
       }
       if (!userId.value) {
-        alert('아이디를 입력해주세요.');
+        toast.error('아이디를 입력해주세요.');
+        return;
       }
       if (!userPw.value) {
-        alert('비밀번호를 입력해주세요.');
+        toast.error('비밀번호를 입력해주세요.');
         return;
       }
 
       const user = JSON.parse(localStorage.getItem(userId.value));
 
       if (!user || userPw.value !== user['password']) {
-        alert('비밀번호가 일치하지 않습니다.');
+        toast.error('비밀번호가 일치하지 않습니다.');
         return;
       }
 
@@ -104,8 +133,8 @@ export default {
         localStorage.setItem('remember_me', JSON.stringify(rememberUser));
       }
 
-      alert('로그인 성공!');
-      store.commit('setUser', { userId: userId.value, password: user['password'], wishlist: user['wishlist'] });
+      toast.success('로그인 성공!');
+      store.commit('setUser', { userId: userId.value, password: user['password'], wishlist: user['wishlist'], search: user['search'] });
       router.push('/');
     };
 
@@ -120,35 +149,41 @@ export default {
 
     const Register = () => {
       if (emailError.value) {
-        alert(emailError.value);
+        toast.error(emailError.value);
         return;
       }
       if (pwError.value) {
-        alert(pwError.value);
+        toast.error(pwError.value);
         return;
       }
       if (!userId.value) {
-        alert('아이디를 입력해주세요.');
+        toast.error('아이디를 입력해주세요.');
         return;
       }
       if (!userPw.value) {
-        alert('비밀번호를 입력해주세요.');
+        toast.error('비밀번호를 입력해주세요.');
         return;
       }
       if (!userConditionAgreement.value) {
-        alert('약관에 동의해주세요.');
+        toast.error('약관에 동의해주세요.');
         return;
       }
 
       if (localStorage.getItem(userId.value)) {
-        alert('존재하는 아이디입니다.');
+        toast.error('존재하는 아이디입니다.');
         return;
       }
 
-      alert('회원가입 성공!');
+      toast.success('회원가입 성공!');
       const user = {
         'password': userPw.value,
         'wishlist': {},
+        'search': {
+          'genre': "장르",
+          'vote avg': "별점",
+          'sort by': "기준",
+          'order by': "순서"
+        },
       }
       localStorage.setItem(userId.value, JSON.stringify(user));
       Toggle();
@@ -222,7 +257,124 @@ export default {
 </script>
 
 <style scoped>
-div {
-  margin-bottom: 10px;
+/* 넷플릭스 스타일 CSS */
+.login-container {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
+
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background-image:
+      url("/src/assets/signin-background.png");
+  background-size: cover;
+  background-position: center;
+  transform-origin: center center;  /* 기울일 때 중심을 유지 */
+  transform: skew(-25deg, 5deg) scale(1.25);
+  filter: brightness(70%) blur(2px);
+}
+
+h1 {
+  color: white;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.login-box {
+  position: relative;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 8px;
+  padding: 30px 20px;
+  width: 320px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  justify-content: center;
+}
+
+.input-container {
+  margin-bottom: 20px;
+  display: flex;
+  align-content: center;
+}
+
+.input-container label {
+  align-content: center;
+  margin-left: 10px;
+  font-size: 14px;
+  color: #8c8c8c;
+}
+
+button {
+  width: 100%;
+  display: flex;
+  background-color: #e50914;
+}
+
+button:hover {
+  background-color: #f6121d;
+}
+
+.toggle-button {
+  display: flex;
+  margin-top: 10px;
+}
+
+.toggle-button button {
+  background-color: transparent;
+  color: white;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: underline;
+  box-shadow: none;
+}
+.toggle-button button:hover {
+  transform: none;
+  color: #f6121d;
+  border: none;
+}
+.toggle-button button:focus {
+  box-shadow: none;
+}
+.toggle-button button:active {
+  box-shadow: none;
+  transform: none;
+}
+
+.input-box {
+  position: relative;
+}
+
+.slide-up-enter-active,
+.slide-up-leave-active {
+  transition: all 0.25s ease-out;
+}
+
+.slide-up-enter-from {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.slide-up-leave-to {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+
+@media (max-width: 768px) {
+  .background {
+    width: 200%;
+    scale: 1.25;
+  }
 }
 </style>

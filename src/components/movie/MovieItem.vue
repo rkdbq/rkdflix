@@ -1,8 +1,11 @@
 <template>
   <div class="movie-item" @click="toggleToWishlist">
-    <div class="poster-container" :class="{'in-wishlist': isInWishlist}">
+    <div class="poster-container">
       <img :src="posterUrl" :alt="title" />
       <p :style="voteAverageStyle" class="vote-box">{{ roundedVoteAverage }}</p>
+      <transition>
+        <span v-if="isInWishlist" class="in-wishlist">*</span>
+      </transition>
     </div>
     <p class="title" v-if="showInfo">{{ title }}</p>
     <p v-if="showInfo">{{ truncatedOverview }}</p>
@@ -92,8 +95,10 @@ export default {
 <style scoped>
 .movie-item {
   width: 200px;
+  transition: transform .25s;
 }
 .movie-item:hover {
+  cursor: pointer;
   transform: scale(1.05);
 }
 img {
@@ -106,8 +111,12 @@ img {
   position: relative;
   width: 100%;
 }
-.poster-container.in-wishlist {
-  border: 2px solid gold;
+.in-wishlist {
+  position: absolute;
+  bottom: -15px;
+  right: 15px;
+  color: red;
+  font-size: 48px;
 }
 .vote-box {
   position: absolute;
@@ -116,5 +125,24 @@ img {
 }
 .title {
   font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .movie-item {
+    scale: 0.8;
+  }
+  .movie-item:hover {
+    scale: 0.85;
+  }
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.25s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 </style>

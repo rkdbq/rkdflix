@@ -1,16 +1,19 @@
 <template>
-  <div>
-    <h1>Search</h1>
-
-    <Filter
-        v-for="[filterType, options] in Object.entries(filters)"
-        :key="filterType"
-        :filter-type="filterType"
-        :options="options"
-        :selected-option="selectedFilterOption[filterType]"
-        @on-option-selected="selectOption"
-    />
-    <button @click="resetFilters" class="reset-button">초기화</button>
+  <div class="search-container">
+    <div class="search-view">
+      <h1 class="list-name">Search</h1>
+      <div class="filter-container">
+        <Filter
+            v-for="[filterType, options] in Object.entries(filters)"
+            :key="filterType"
+            :filter-type="filterType"
+            :options="options"
+            :selected-option="selectedFilterOption[filterType]"
+            @on-option-selected="selectOption"
+        />
+        <RkdButton :on-click="resetFilters"><FontAwesomeIcon :icon="faRotateRight()" /></RkdButton>
+      </div>
+    </div>
 
     <MovieScrollView :go-top="goTop" :movie-items="movieItems"/>
 
@@ -19,10 +22,14 @@
 </template>
 
 <script>
-import {onBeforeUnmount, onMounted, reactive, ref} from "vue";
+import {computed, onBeforeMount, onBeforeUnmount, onMounted, reactive, ref} from "vue";
 import Filter from "@/components/etc/Filter.vue";
 import Loading from "@/components/etc/Loading.vue";
 import MovieScrollView from "@/components/movie/MovieScrollView.vue";
+import RkdButton from "@/components/etc/RkdButton.vue";
+import {useStore} from "vuex";
+import {faRotateRight} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
 const url = 'https://api.themoviedb.org/3/discover/';
 const options = {
@@ -35,8 +42,15 @@ const options = {
 
 export default {
   name: "SearchMovie",
-  components: {MovieScrollView, Filter, Loading },
+  methods: {
+    faRotateRight() {
+      return faRotateRight
+    }
+  },
+  components: {FontAwesomeIcon, RkdButton, MovieScrollView, Filter, Loading },
   setup() {
+    const store = useStore();
+
     const movieItems = ref([]);
     const currentPage = ref(1);
     const isScrollListening = ref(true);
@@ -52,12 +66,9 @@ export default {
       '오름차순': "asc",
       '내림차순': "desc"
     });
-    const selectedFilterOption = reactive({
-      'genre': "장르",
-      'vote avg': "별점",
-      'sort by': "기준",
-      'order by': "순서"
-    });
+    const selectedFilterOption = computed(
+    () => store.state.user.search,
+    );
     const filters = reactive({
       'genre': [],
       'vote avg': ['0-2', '2-4', '4-6', '6-8', '8-10'],
@@ -66,10 +77,11 @@ export default {
     });
 
     const resetFilters = () => {
-      selectedFilterOption['genre'] = "장르";
-      selectedFilterOption['vote avg'] = "별점";
-      selectedFilterOption['sort by'] = "기준";
-      selectedFilterOption['order by'] = "순서";
+      store.state.user.search['genre'] = "장르";
+      store.state.user.search['vote avg'] = "별점";
+      store.state.user.search['sort by'] = "기준";
+      store.state.user.search['order by'] = "순서";
+
       movieItems.value = [];
       currentPage.value = 1;
       fetchSearchedMovies(currentPage.value);
@@ -86,6 +98,9 @@ export default {
               genreId[genre['name']] = genre['id'];
             });
           })
+          .finally(() => {
+            fetchSearchedMovies(currentPage.value);
+          })
     };
 
     const fetchSearchedMovies = (page) => {
@@ -93,13 +108,13 @@ export default {
 
       const pathParam = "movie"
       const language = "ko";
-      const genre = selectedFilterOption['genre'];
-      const voteAverage = selectedFilterOption['vote avg'];
-      const sortBy = selectedFilterOption['sort by'];
-      const orderBy = selectedFilterOption['order by'];
+      const genre = store.state.user.search['genre'];
+      const voteAverage = store.state.user.search['vote avg'];
+      const sortBy = store.state.user.search['sort by'];
+      const orderBy = store.state.user.search['order by'];
 
       let queryUrl = url + `${pathParam}?language=${language}&page=${page}`;
-      if (genre !== "장르") {
+      if (genre !== "장르" && genreId[genre]) {
         queryUrl += `&with_genres=${genreId[genre]}`;
       }
       if (voteAverage !== "별점") {
@@ -124,7 +139,10 @@ export default {
     };
 
     const goTop = () => {
-      window.scrollTo(0, 0);
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
     };
 
     const handleScroll = () => {
@@ -146,17 +164,17 @@ export default {
     };
 
     const selectOption = (payload) => {
-      const filter = payload[0];
-      selectedFilterOption[filter] = payload[1];
+      store.dispatch('updateMovieSearchOption', payload);
 
       movieItems.value = [];
       currentPage.value = 1;
       fetchSearchedMovies(currentPage.value);
     };
 
-    onMounted(() => {
+    onBeforeMount(() => {
       getGenreList();
-      fetchSearchedMovies(currentPage.value);
+    })
+    onMounted(async () => {
       window.addEventListener('scroll', handleScroll);
     });
 
@@ -186,8 +204,44 @@ export default {
 </script>
 
 <style scoped>
-.reset-button {
-  width: 100px;
+.search-container {
   margin: 16px;
+}
+.search-view {
+  display: flex;
+  justify-content: space-between;
+}
+.list-name {
+  margin-left: 16px;
+  margin-bottom: 0;
+}
+.filter-container {
+  justify-content: flex-end;
+  margin: 16px;
+}
+.filter-container button {
+  margin: 16px;
+  background-color: #e50914;
+}
+.filter-container button:hover {
+  background-color: #f6121d;
+}
+@media (max-width: 768px) {
+  .list-name {
+    display: none; /* 모바일에서 텍스트 숨김 */
+  }
+  .search-view {
+    justify-content: center;
+  }
+  .filter-container {
+    justify-content: center;
+    align-content: center;
+    display: flex;
+  }
+  .filter-container button {
+    margin: 0 2px;
+    font-size: 12px;
+    padding: 12px;
+  }
 }
 </style>

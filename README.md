@@ -1,4 +1,4 @@
-# rkdflix
+# [rkdflix](https://rkdbq.github.io/rkdflix/)
 
 ## 프로젝트 개요
 rkdflix는 영화 정보를 제공하고 사용자가 영화를 검색하고 위시리스트에 추가할 수 있는 Vue.js 기반 웹 애플리케이션입니다.

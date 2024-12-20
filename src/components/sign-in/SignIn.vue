@@ -318,6 +318,7 @@ export default {
             KakaoLogIn(user.id, user.properties.nickname);
           }
         } catch (error) {
+          toast.error('토큰 요청 중 오류가 발생했습니다.');
           console.error('토큰 요청 중 오류 발생:', error);
         }
       }

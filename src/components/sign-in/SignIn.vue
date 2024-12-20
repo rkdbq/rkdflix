@@ -109,9 +109,9 @@ export default {
 
     const KakaoAuth = () => {
       const url = 'https://kauth.kakao.com/oauth/authorize?client_id=' +
-          'b5f9610f9e1a0fde4bf46b9f3a45eebd' +
+          process.env.VUE_APP_DEV_KAKAO_CLIENT_ID +
           '&redirect_uri=' +
-          'http://127.0.0.1:8080/rkdflix/oauth' +
+          process.env.VUE_APP_DEV_KAKAO_REDIRECT_URI +
           '&response_type=code&' +
           'scope=profile_nickname';
 
@@ -177,12 +177,12 @@ export default {
       userConditionAgreement.value = false;
     };
 
-    const KakaoLogIn = (kakaoId) => {
+    const KakaoLogIn = (kakaoId, nickname) => {
       const user = JSON.parse(localStorage.getItem(kakaoId));
 
       if (user) {
         toast.success('로그인 성공!');
-        store.commit('setUser', { userId: kakaoId, password: user['password'], wishlist: user['wishlist'], search: user['search'] });
+        store.commit('setUser', { userId: kakaoId, password: user['password'], wishlist: user['wishlist'], search: user['search'], nickname: user['nickname'] });
       }
       else {
         toast.success('회원가입 성공!');
@@ -195,9 +195,10 @@ export default {
             'sort by': "기준",
             'order by': "순서"
           },
+          'nickname': nickname
         }
         localStorage.setItem(kakaoId, JSON.stringify(user));
-        store.commit('setUser', { userId: kakaoId, password: user['password'], wishlist: user['wishlist'], search: user['search'] });
+        store.commit('setUser', { userId: kakaoId, password: user['password'], wishlist: user['wishlist'], search: user['search'], nickname: user['nickname'] });
       }
 
       router.push('/');
@@ -280,6 +281,8 @@ export default {
     }
 
     onMounted( async () => {
+      console.log(process.env)
+
       const rememberMe = JSON.parse(localStorage.getItem('remember_me'));
       if (rememberMe) {
         userId.value = rememberMe['id'];
@@ -296,15 +299,18 @@ export default {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: new URLSearchParams({
               grant_type: 'authorization_code',
-              client_id: 'b5f9610f9e1a0fde4bf46b9f3a45eebd',
-              redirect_uri: 'http://127.0.0.1:8080/rkdflix/oauth',
+              client_id: process.env.VUE_APP_DEV_KAKAO_CLIENT_ID,
+              redirect_uri: process.env.VUE_APP_DEV_KAKAO_REDIRECT_URI,
               code: authorizeCode
             })
           });
           const data = await response.json();
           if(data.access_token) {
             const user = await GetKakaoUser(data.access_token);
-            KakaoLogIn(user.id);
+
+            console.log(user.id);
+            console.log(user.properties.nickname);
+            KakaoLogIn(user.id, user.properties.nickname);
           }
         } catch (error) {
           console.error('토큰 요청 중 오류 발생:', error);

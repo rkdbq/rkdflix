@@ -8,7 +8,8 @@
         <RouterLink class="nav-item nav-route" to="/wishlist"><FontAwesomeIcon :icon="faHeart" /> <span>위시리스트</span></RouterLink>
       </nav>
       <nav class="nav-user">
-        <p class="user-info">{{ userId }} 님</p>
+        <p v-if="userNickname" class="user-info">{{ userNickname }} 님</p>
+        <p v-else class="user-info">{{ userId }} 님</p>
         <div class="logout-button">
           <RkdButton class="logout-button" :on-click="LogOut">로그아웃</RkdButton>
         </div>
@@ -35,6 +36,7 @@ const isSignInRoute = computed(() => route.path === '/sign-in');
 
 const store = useStore();
 const userId = computed(() => store.state.user.userId);
+const userNickname = computed(() => store.state.user.nickname);
 
 const LogOut = () => {
   localStorage.removeItem('remember_me');

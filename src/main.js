@@ -36,7 +36,8 @@ const store = createStore({
                     'vote avg': "별점",
                     'sort by': "기준",
                     'order by': "순서",
-                }
+                },
+                nickname: null,
             },
         };
     },

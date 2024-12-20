@@ -66,6 +66,7 @@ const store = createStore({
                 'password': store.state.user.password,
                 'wishlist': store.state.user.wishlist,
                 'search': store.state.user.search,
+                'nickname': store.state.user.nickname,
             }
             localStorage.setItem(userId, JSON.stringify(user));
         },
@@ -79,6 +80,7 @@ const store = createStore({
                 'password': store.state.user.password,
                 'wishlist': store.state.user.wishlist,
                 'search': store.state.user.search,
+                'nickname': store.state.user.nickname,
             }
             localStorage.setItem(userId, JSON.stringify(user));
         },

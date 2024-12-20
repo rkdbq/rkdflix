@@ -164,7 +164,7 @@ export default {
       }
 
       toast.success('로그인 성공!');
-      store.commit('setUser', { userId: userId.value, password: user['password'], wishlist: user['wishlist'], search: user['search'] });
+      store.commit('setUser', { userId: userId.value, password: user['password'], wishlist: user['wishlist'], search: user['search'], nickname: user['nickname'] });
       router.push('/');
     };
 
@@ -182,7 +182,6 @@ export default {
 
       if (user) {
         toast.success('로그인 성공!');
-        store.commit('setUser', { userId: kakaoId, password: user['password'], wishlist: user['wishlist'], search: user['search'], nickname: user['nickname'] });
       }
       else {
         toast.success('회원가입 성공!');
@@ -198,8 +197,14 @@ export default {
           'nickname': nickname
         }
         localStorage.setItem(kakaoId, JSON.stringify(user));
-        store.commit('setUser', { userId: kakaoId, password: user['password'], wishlist: user['wishlist'], search: user['search'], nickname: user['nickname'] });
       }
+      
+      store.commit('setUser', { userId: kakaoId, password: user['password'], wishlist: user['wishlist'], search: user['search'], nickname: user['nickname'] });
+      const rememberUser = {
+          id: kakaoId,
+          password: 'kakao',
+        }
+        localStorage.setItem('remember_me', JSON.stringify(rememberUser));
 
       router.push('/');
     }

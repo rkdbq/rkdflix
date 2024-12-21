@@ -32,7 +32,10 @@ const options = {
   method: 'GET',
   headers: {
     accept: 'application/json',
-    Authorization: `Bearer ${process.env.VUE_APP_DEV_TMDB_API_KEY}`
+    Authorization: `Bearer ${
+      process.env.NODE_ENV === 'production'
+      ? process.env.VUE_APP_PROD_TMDB_API_KEY
+      : process.env.VUE_APP_DEV_TMDB_API_KEY}`
   }
 };
 

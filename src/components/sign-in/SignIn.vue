@@ -145,6 +145,9 @@ export default {
     }
 
     const LogIn = () => {
+      if(!navigator.onLine) {
+        return;
+      }
       if(emailError.value) {
         toast.error(emailError.value);
         return;
@@ -328,14 +331,13 @@ export default {
             KakaoLogIn(user.id, user.properties.nickname);
           }
         } catch (error) {
-          if (error.name === 'TypeError') {
+          if(!navigator.onLine) {
             console.error('네트워크 연결 오류:', error);
             toast.error('네트워크 연결에 문제가 있습니다. 인터넷을 확인하세요.');
+            router.push('/error');
           }
-          else {
-            console.error('API 호출 오류:', error);
-            toast.error('API 호출 중 오류가 발생했습니다.');
-          }
+          console.error('API 호출 오류:', error);
+          toast.error('API 호출 중 오류가 발생했습니다.');
         }
       }
     })

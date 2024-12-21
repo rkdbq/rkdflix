@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <header v-if="!isSignInRoute" class="header-container">
+    <header v-if="!isSignInRoute && !isErrorRoute" class="header-container">
       <nav class="nav-main">
         <RouterLink class="nav-item nav-route" to="/"><FontAwesomeIcon :icon="faHouse" /> <span>홈</span></RouterLink>
         <RouterLink class="nav-item nav-route" to="/popular"><FontAwesomeIcon :icon="faFire" /> <span>인기</span></RouterLink>
@@ -33,6 +33,7 @@ import {faFire, faHeart, faHouse, faSearch} from "@fortawesome/free-solid-svg-ic
 const route = useRoute();
 const router = useRouter();
 const isSignInRoute = computed(() => route.path === '/sign-in');
+const isErrorRoute = computed(() => route.path === '/error');
 
 const store = useStore();
 const userId = computed(() => store.state.user.userId);
@@ -48,6 +49,19 @@ onMounted(() => {
   if(store.state.user.userId === null) {
     router.push('/sign-in');
   }
+
+  const handleOffline = () => {
+    console.error('오프라인 상태 감지!');
+    router.push('/error'); // 에러 페이지로 라우팅
+  };
+
+  // 네트워크 상태 이벤트 리스너 등록
+  window.addEventListener('offline', handleOffline);
+
+  return () => {
+    // 컴포넌트 언마운트 시 이벤트 리스너 해제
+    window.removeEventListener('offline', handleOffline);
+  };
 })
 </script>
 

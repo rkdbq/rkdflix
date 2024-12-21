@@ -10,6 +10,7 @@ import PopularMovie from "@/components/Popular.vue";
 import Search from "@/components/Search.vue";
 import Wishlist from "@/components/Wishlist.vue";
 import SignIn from "@/components/sign-in/SignIn.vue";
+import ErrorPage from "@/components/ErrorPage.vue";
 
 const routes = [
     { path: '/', component: Home },
@@ -17,6 +18,7 @@ const routes = [
     { path: '/search', component: Search },
     { path: '/wishlist', component: Wishlist },
     { path: '/sign-in', component: SignIn },
+    { path: '/error', name: 'ErrorPage', component: ErrorPage },
 ]
 
 const router = createRouter({

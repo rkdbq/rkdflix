@@ -40,6 +40,7 @@ const userNickname = computed(() => store.state.user.nickname);
 
 const LogOut = () => {
   localStorage.removeItem('remember_me');
+  localStorage.removeItem('access_token');
   router.push('/sign-in');
 }
 

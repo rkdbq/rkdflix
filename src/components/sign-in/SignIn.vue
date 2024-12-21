@@ -286,8 +286,6 @@ export default {
     }
 
     onMounted( async () => {
-      console.log(process.env)
-
       const rememberMe = JSON.parse(localStorage.getItem('remember_me'));
       if (rememberMe) {
         userId.value = rememberMe['id'];
@@ -312,6 +310,7 @@ export default {
           const data = await response.json();
           if(data.access_token) {
             const user = await GetKakaoUser(data.access_token);
+            localStorage.setItem('access_token', data.access_token);
 
             console.log(user.id);
             console.log(user.properties.nickname);

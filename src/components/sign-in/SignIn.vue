@@ -138,6 +138,8 @@ export default {
           const data = await response.json();
           return data;
         } catch (error) {
+          toast.error('토큰 요청 중 오류가 발생했습니다.');
+          console.error('토큰 요청 중 오류 발생:', error);
           return error;
         }
     }
@@ -326,8 +328,14 @@ export default {
             KakaoLogIn(user.id, user.properties.nickname);
           }
         } catch (error) {
-          toast.error('토큰 요청 중 오류가 발생했습니다.');
-          console.error('토큰 요청 중 오류 발생:', error);
+          if (error.name === 'TypeError') {
+            console.error('네트워크 연결 오류:', error);
+            toast.error('네트워크 연결에 문제가 있습니다. 인터넷을 확인하세요.');
+          }
+          else {
+            console.error('API 호출 오류:', error);
+            toast.error('API 호출 중 오류가 발생했습니다.');
+          }
         }
       }
     })

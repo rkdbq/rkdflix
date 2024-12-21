@@ -306,39 +306,47 @@ export default {
         userPw.value = rememberMe['password'];
         LogIn();
       }
-      
-      const urlParams = new URLSearchParams(window.location.search);
-      const authorizeCode = urlParams.get('code');
-      if (authorizeCode) {
-        try {
-          const response = await fetch('https://kauth.kakao.com/oauth/token', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({
-              grant_type: 'authorization_code',
-              client_id: clientId,
-              redirect_uri: redirectUri,
-              code: authorizeCode
-            })
-          });
-          const data = await response.json();
-          if(data.access_token) {
-            const user = await GetKakaoUser(data.access_token);
-            localStorage.setItem('access_token', data.access_token);
-
-            console.log(user.id);
-            console.log(user.properties.nickname);
-            KakaoLogIn(user.id, user.properties.nickname);
+      else {
+        const urlParams = new URLSearchParams(window.location.search);
+        const authorizeCode = urlParams.get('code');
+        if (authorizeCode) {
+          try {
+            const response = await fetch('https://kauth.kakao.com/oauth/token', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+              body: new URLSearchParams({
+                grant_type: 'authorization_code',
+                client_id: clientId,
+                redirect_uri: redirectUri,
+                code: authorizeCode
+              })
+            });
+            const data = await response.json();
+            if(response.status == 200) {
+              if(data.access_token) {
+                const user = await GetKakaoUser(data.access_token);
+                localStorage.setItem('access_token', data.access_token);
+    
+                console.log(user.id);
+                console.log(user.properties.nickname);
+                KakaoLogIn(user.id, user.properties.nickname);
+              }
+            }
+            else {
+              toast.error(response.statusText);
+            }
+  
+          } catch (error) {
+            if(!navigator.onLine) {
+              console.error('네트워크 연결 오류:', error);
+              toast.error('네트워크 연결에 문제가 있습니다. 인터넷을 확인하세요.');
+              router.push('/error');
+            }
+            console.error('API 호출 오류:', error);
+            toast.error('API 호출 중 오류가 발생했습니다.');
           }
-        } catch (error) {
-          if(!navigator.onLine) {
-            console.error('네트워크 연결 오류:', error);
-            toast.error('네트워크 연결에 문제가 있습니다. 인터넷을 확인하세요.');
-            router.push('/error');
-          }
-          console.error('API 호출 오류:', error);
-          toast.error('API 호출 중 오류가 발생했습니다.');
         }
+        window.history.replaceState({}, '', '/rkdflix/');
       }
     })
 

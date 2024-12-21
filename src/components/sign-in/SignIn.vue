@@ -186,14 +186,14 @@ export default {
     };
 
     const KakaoLogIn = (kakaoId, nickname) => {
-      const user = JSON.parse(localStorage.getItem(kakaoId));
+      let user = JSON.parse(localStorage.getItem(kakaoId));
 
       if (user) {
         toast.success('로그인 성공!');
       }
       else {
         toast.success('회원가입 성공!');
-        const user = {
+        const new_user = {
           'password': 'kakao',
           'wishlist': {},
           'search': {
@@ -204,7 +204,8 @@ export default {
           },
           'nickname': nickname
         }
-        localStorage.setItem(kakaoId, JSON.stringify(user));
+        localStorage.setItem(kakaoId, JSON.stringify(new_user));
+        user = JSON.parse(localStorage.getItem(kakaoId));
       }
       
       store.commit('setUser', { userId: kakaoId, password: user['password'], wishlist: user['wishlist'], search: user['search'], nickname: user['nickname'] });

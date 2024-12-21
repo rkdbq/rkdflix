@@ -63,6 +63,9 @@
 
       <div class="action-buttons">
         <RkdButton v-if="isLogin" :on-click="LogIn" :width-size="200">로그인</RkdButton>
+        <div class="oauth-button">
+          <RkdButton v-if="isLogin" :on-click="KakaoLogIn" :width-size="200">카카오 로그인</RkdButton>
+        </div>
         <RkdButton v-if="!isLogin" :on-click="Register" :width-size="200">회원가입</RkdButton>
       </div>
 
@@ -104,7 +107,47 @@ export default {
     const emailError = ref('');
     const pwError = ref('');
 
+    let clientId = process.env.VUE_APP_DEV_KAKAO_CLIENT_ID;
+    let redirectUri = process.env.VUE_APP_DEV_KAKAO_REDIRECT_URI;
+
+    if (process.env.NODE_ENV === 'production') {
+      clientId = process.env.VUE_APP_PROD_KAKAO_CLIENT_ID;
+      redirectUri = process.env.VUE_APP_PROD_KAKAO_REDIRECT_URI;
+    }
+
+    const KakaoAuth = () => {
+      const url = 'https://kauth.kakao.com/oauth/authorize?client_id=' +
+        clientId + 
+        '&redirect_uri=' +
+        redirectUri +
+        '&response_type=code&' +
+        'scope=profile_nickname';
+
+      window.location.href = url;
+    }
+
+    const GetKakaoUser = async (accessToken) => {
+      try {
+          const response = await fetch('https://kapi.kakao.com/v2/user/me', {
+            method: 'POST',
+            headers: { 
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'Authorization': `Bearer ${accessToken}`
+             }
+          });
+          const data = await response.json();
+          return data;
+        } catch (error) {
+          toast.error('토큰 요청 중 오류가 발생했습니다.');
+          console.error('토큰 요청 중 오류 발생:', error);
+          return error;
+        }
+    }
+
     const LogIn = () => {
+      if(!navigator.onLine) {
+        return;
+      }
       if(emailError.value) {
         toast.error(emailError.value);
         return;
@@ -134,7 +177,7 @@ export default {
       }
 
       toast.success('로그인 성공!');
-      store.commit('setUser', { userId: userId.value, password: user['password'], wishlist: user['wishlist'], search: user['search'] });
+      store.commit('setUser', { userId: userId.value, password: user['password'], wishlist: user['wishlist'], search: user['search'], nickname: user['nickname'] });
       router.push('/');
     };
 
@@ -146,6 +189,39 @@ export default {
       userPwConfirm.value = '';
       userConditionAgreement.value = false;
     };
+
+    const KakaoLogIn = (kakaoId, nickname) => {
+      let user = JSON.parse(localStorage.getItem(kakaoId));
+
+      if (user) {
+        toast.success('로그인 성공!');
+      }
+      else {
+        toast.success('회원가입 성공!');
+        const new_user = {
+          'password': 'kakao',
+          'wishlist': {},
+          'search': {
+            'genre': "장르",
+            'vote avg': "별점",
+            'sort by': "기준",
+            'order by': "순서"
+          },
+          'nickname': nickname
+        }
+        localStorage.setItem(kakaoId, JSON.stringify(new_user));
+        user = JSON.parse(localStorage.getItem(kakaoId));
+      }
+      
+      store.commit('setUser', { userId: kakaoId, password: user['password'], wishlist: user['wishlist'], search: user['search'], nickname: user['nickname'] });
+      const rememberUser = {
+          id: kakaoId,
+          password: 'kakao',
+        }
+        localStorage.setItem('remember_me', JSON.stringify(rememberUser));
+
+      router.push('/');
+    }
 
     const Register = () => {
       if (emailError.value) {
@@ -223,12 +299,54 @@ export default {
       userConditionAgreement.value = args[0].value;
     }
 
-    onMounted(() => {
+    onMounted( async () => {
       const rememberMe = JSON.parse(localStorage.getItem('remember_me'));
       if (rememberMe) {
         userId.value = rememberMe['id'];
         userPw.value = rememberMe['password'];
         LogIn();
+      }
+      else {
+        const urlParams = new URLSearchParams(window.location.search);
+        const authorizeCode = urlParams.get('code');
+        if (authorizeCode) {
+          try {
+            const response = await fetch('https://kauth.kakao.com/oauth/token', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+              body: new URLSearchParams({
+                grant_type: 'authorization_code',
+                client_id: clientId,
+                redirect_uri: redirectUri,
+                code: authorizeCode
+              })
+            });
+            const data = await response.json();
+            if(response.status == 200) {
+              if(data.access_token) {
+                const user = await GetKakaoUser(data.access_token);
+                localStorage.setItem('access_token', data.access_token);
+    
+                console.log(user.id);
+                console.log(user.properties.nickname);
+                KakaoLogIn(user.id, user.properties.nickname);
+              }
+            }
+            else {
+              toast.error(response.statusText);
+            }
+  
+          } catch (error) {
+            if(!navigator.onLine) {
+              console.error('네트워크 연결 오류:', error);
+              toast.error('네트워크 연결에 문제가 있습니다. 인터넷을 확인하세요.');
+              router.push('/error');
+            }
+            console.error('API 호출 오류:', error);
+            toast.error('API 호출 중 오류가 발생했습니다.');
+          }
+        }
+        window.history.replaceState({}, '', '/rkdflix/');
       }
     })
 
@@ -244,6 +362,7 @@ export default {
       pwError,
       Toggle,
       LogIn,
+      KakaoLogIn: KakaoAuth,
       Register,
       validateEmail,
       onIdChanged,
@@ -318,11 +437,21 @@ h1 {
 button {
   width: 100%;
   display: flex;
+  margin-bottom: 10px;
   background-color: #e50914;
+}
+
+.oauth-button button {
+  color: #2a2828;
+  background-color: #f7ff06;
 }
 
 button:hover {
   background-color: #f6121d;
+}
+
+.oauth-button button:hover {
+  background-color: #c5cb10;
 }
 
 .toggle-button {

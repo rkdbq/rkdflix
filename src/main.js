@@ -10,6 +10,7 @@ import PopularMovie from "@/components/Popular.vue";
 import Search from "@/components/Search.vue";
 import Wishlist from "@/components/Wishlist.vue";
 import SignIn from "@/components/sign-in/SignIn.vue";
+import ErrorPage from "@/components/ErrorPage.vue";
 
 const routes = [
     { path: '/', component: Home },
@@ -17,6 +18,7 @@ const routes = [
     { path: '/search', component: Search },
     { path: '/wishlist', component: Wishlist },
     { path: '/sign-in', component: SignIn },
+    { path: '/error', name: 'ErrorPage', component: ErrorPage },
 ]
 
 const router = createRouter({
@@ -36,7 +38,8 @@ const store = createStore({
                     'vote avg': "별점",
                     'sort by': "기준",
                     'order by': "순서",
-                }
+                },
+                nickname: null,
             },
         };
     },
@@ -65,6 +68,7 @@ const store = createStore({
                 'password': store.state.user.password,
                 'wishlist': store.state.user.wishlist,
                 'search': store.state.user.search,
+                'nickname': store.state.user.nickname,
             }
             localStorage.setItem(userId, JSON.stringify(user));
         },
@@ -78,6 +82,7 @@ const store = createStore({
                 'password': store.state.user.password,
                 'wishlist': store.state.user.wishlist,
                 'search': store.state.user.search,
+                'nickname': store.state.user.nickname,
             }
             localStorage.setItem(userId, JSON.stringify(user));
         },

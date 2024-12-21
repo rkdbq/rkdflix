@@ -107,13 +107,21 @@ export default {
     const emailError = ref('');
     const pwError = ref('');
 
+    let clientId = process.env.VUE_APP_DEV_KAKAO_CLIENT_ID;
+    let redirectUri = process.env.VUE_APP_DEV_KAKAO_REDIRECT_URI;
+
+    if (process.env.NODE_ENV === 'production') {
+      clientId = process.env.VUE_APP_PROD_KAKAO_CLIENT_ID;
+      redirectUri = process.env.VUE_APP_PROD_KAKAO_REDIRECT_URI;
+    }
+
     const KakaoAuth = () => {
       const url = 'https://kauth.kakao.com/oauth/authorize?client_id=' +
-          process.env.VUE_APP_DEV_KAKAO_CLIENT_ID +
-          '&redirect_uri=' +
-          process.env.VUE_APP_DEV_KAKAO_REDIRECT_URI +
-          '&response_type=code&' +
-          'scope=profile_nickname';
+        clientId + 
+        '&redirect_uri=' +
+        redirectUri +
+        '&response_type=code&' +
+        'scope=profile_nickname';
 
       window.location.href = url;
     }
@@ -302,8 +310,8 @@ export default {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: new URLSearchParams({
               grant_type: 'authorization_code',
-              client_id: process.env.VUE_APP_DEV_KAKAO_CLIENT_ID,
-              redirect_uri: process.env.VUE_APP_DEV_KAKAO_REDIRECT_URI,
+              client_id: clientId,
+              redirect_uri: redirectUri,
               code: authorizeCode
             })
           });
